@@ -16,8 +16,11 @@ Best practice to create branch when adding features/remediating problems (even i
 Ideally we'd want 1 human approval before a PR is merged. Our github actions (CICD pipeline) can also run checks against the code (lint/sast/build/run/deploy/etc.)
 
 git add examplefile.py
+
 git add --all (adds all files changed)
+
 git commit -m "message"
+
 git push
 
 (on github select compare & pull request)
