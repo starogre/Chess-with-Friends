@@ -7,6 +7,7 @@ Within link above we can create/track tasks
 ## Creating task on Jira
 
 Select 'Board' --> 'Create' --> Add 'Summary' --> Select 'Assignee' --> 'Create'
+
 Click on Card --> 'Create branch' --> 'Select a repository' --> 'Branch from' --> 'Create branch'
 
 Best practice to create branch when adding features/remediating problems (even if its tiny fix), then submit PR for merge back into development/main
