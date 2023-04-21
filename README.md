@@ -31,15 +31,23 @@ If you want to add changes from another branch into your code before submitting 
 https://www.atlassian.com/git/tutorials/merging-vs-rebasing
 
 Example using feature1 branch and development
+
 git checkout development
+
 git pull
+
 git checkout feature1
+
 git merge development
+
 (this will merge changes from development into your local feature1 branch you were working on)
 
 Same can be achieved with rebase
+
 git checkout feature1
+
 git fetch
+
 git rebase development
 
 Difference between these two sequences is the way they combine the changes: the first one uses a merge, creating a non-linear commit history, while the second one uses a rebase, creating a linear commit history.
