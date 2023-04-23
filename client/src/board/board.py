@@ -1,3 +1,5 @@
+import Square
+
 class Board:
     def __init__(self):
         self.board = self.initialize_board()
