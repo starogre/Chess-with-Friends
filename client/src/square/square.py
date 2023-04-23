@@ -1,5 +1,7 @@
 class Square:
-    def __init__(self, piece=None):
+    def __init__(self, row, col, piece=None):
+        self.row = row
+        self.col = col
         self.piece = piece
 
     def set_piece(self, piece):
