@@ -6,7 +6,7 @@ class Board:
 
     def initialize_board(self):
         # Initialize the board with empty Square objects
-        board = [[Square() for _ in range(8)] for _ in range(8)]
+        board = [[Square(row, col) for col in range(8)] for row in range(8)]
         return board
 
     def get_piece_at(self, row, col):
