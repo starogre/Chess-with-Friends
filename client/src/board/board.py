@@ -1,12 +1,14 @@
 import Square
 
 class Board:
-    def __init__(self):
+    def __init__(self, c, r):
         self.board = self.initialize_board()
+        self.col = c
+        self.row = r
 
     def initialize_board(self):
         # Initialize the board with empty Square objects
-        board = [[Square(row, col) for col in range(8)] for row in range(8)]
+        board = [[Square(row, col) for col in range(self.col)] for row in range(self.row)]
         return board
 
     def get_piece_at(self, row, col):
