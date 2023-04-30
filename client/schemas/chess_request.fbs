@@ -1,0 +1,25 @@
+include "chess_common.fbs";
+
+namespace chess.request;
+
+table Move {
+  piece_id: uint;
+  from: chess.common.Position;
+  to: chess.common.Position;
+}
+
+enum RequestType : byte {
+  MOVE = 0,
+  RESIGN = 1,
+}
+
+union RequestContent {
+  Move,
+}
+
+table Request {
+  request_type: RequestType;
+  content: RequestContent;
+}
+
+root_type Request;

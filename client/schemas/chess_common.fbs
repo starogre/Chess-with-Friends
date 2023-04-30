@@ -1,4 +1,4 @@
-namespace chess.standard.game;
+namespace chess.common;
 
 enum PieceType : byte {
   PAWN = 0,
@@ -29,12 +29,3 @@ table Piece {
 table BoardState {
   pieces: [Piece];
 }
-
-table Move {
-  piece_id: uint;
-  from: Position;
-  to: Position;
-}
-
-root_type BoardState;
-
