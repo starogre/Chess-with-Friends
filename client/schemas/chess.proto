@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package chess.standard;
+
+enum PieceType {
+  PAWN = 0;
+  ROOK = 1;
+  KNIGHT = 2;
+  BISHOP = 3;
+  QUEEN = 4;
+  KING = 5;
+}
+
+enum PieceColor {
+  WHITE = 0;
+  BLACK = 1;
+}
+
+message Position {
+  int32 x = 1;
+  int32 y = 2;
+}
+
+message Piece {
+  int32 id = 1;
+  PieceType piece_type = 2;
+  PieceColor color = 3;
+  Position position = 4;
+}
+
+message BoardState {
+  repeated Piece pieces = 1;
+}
+
+message Move {
+  int32 piece_id = 1;
+  Position from_position = 2;
+  Position to_position = 3;
+}
+
+enum MessageType {
+  MOVE = 0;
+  MOVE_RESULT = 1;
+  GAME_OVER = 2;
+}
+
+enum GameEndReason {
+  CHECKMATE = 0;
+  STALEMATE = 1;
+  RESIGNATION = 2;
+  AGREED_DRAW = 3;
+  TIME_OUT = 4;
+}
+
+message MoveMessage {
+  Move move = 1;
+}
+
+message MoveResultMessage {
+  Move move = 1;
+  BoardState board_state = 2;
+  bool valid = 3;
+  uint32 error_code = 4;
+}
+
+message GameOverMessage {
+  PieceColor winner_color = 1;
+  GameEndReason reason = 2;
+}
+
+message Message {
+  MessageType message_type = 1;
+  oneof content {
+    MoveMessage move_message = 2;
+    MoveResultMessage move_result_message = 3;
+    GameOverMessage game_over_message = 4;
+  }
+}
+
+//Service definition
+service ChessService {
+  rpc MakeMove(Move) returns (MoveResultMessage);
+  rpc EndGame(GameOverMessage) returns (MoveResultMessage);
+}
