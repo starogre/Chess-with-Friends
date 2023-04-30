@@ -1,6 +1,7 @@
-import Board
-import Square
-import Piece
+from board import Board
+# from square import Square
+# from chess_piece import ChessPiece
+
 
 class StateHandler:
     # validate and execute moves
@@ -9,7 +10,8 @@ class StateHandler:
     # used by game controller to manage Game flow, player turn, extend to gui??
 
     def __init__(self):
-        pass
+        self.selected_piece = None
+        self.board = Board()
 
     def start_pieces(self):
         # fill pieces on chess board at start of game
@@ -20,7 +22,7 @@ class StateHandler:
         pass
 
     def select_piece(self):
-        # check type of piece
+        # check type of piece and get its board square
         pass
 
     def move_is_valid(self):
@@ -43,10 +45,9 @@ class StateHandler:
         # check if a player is in checkmate
         pass
 
-
     def print_gui(self):
         # draw ascii board in console
         # request player input and show messages
         # later to become real gui
+        # later we can also record moves on the side like chess.com so you can see the different board states?
         pass
-

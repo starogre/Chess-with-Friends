@@ -5,7 +5,6 @@ class ChessPiece(ABC):
         self.color = color
         self.position = position
         self.has_moved = False
-    
 
     @abstractmethod
     def move_piece(self, new_position):
