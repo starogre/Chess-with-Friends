@@ -6,7 +6,7 @@ class StateHandler:
     # validate and execute moves
     # alter board state
     # fill up squares with pieces
-    # Game flow, player turn, extend to gui??
+    # used by game controller to manage Game flow, player turn, extend to gui??
 
     def __init__(self):
         pass
@@ -15,8 +15,8 @@ class StateHandler:
         # fill pieces on chess board at start of game
         pass
 
-    def player_turn(self):
-        # return player turn to be used in game loop
+    def get_active_player(self):
+        # return which players turn it is
         pass
 
     def select_piece(self):
@@ -31,6 +31,17 @@ class StateHandler:
         #
         pass
 
+    def update_state(self):
+        # update game state after each move
+        pass
+
+    def is_in_check(self):
+        # check if player is in check
+        pass
+
+    def is_checkmate(self):
+        # check if a player is in checkmate
+        pass
 
 
     def print_gui(self):
