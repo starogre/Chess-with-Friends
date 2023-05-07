@@ -7,6 +7,9 @@ class ChessPiece(ABC):
         self.position = position
         self.has_moved = False
 
+    def get_position(self):
+        return self.position
+
     def move_piece(self, new_position):
         self.position = new_position
         self.has_moved = True
@@ -38,14 +41,8 @@ class Knight(ChessPiece):
 class Rook(ChessPiece):
     def find_moves(self):
         # return result of algo to pass to state handler to check valid moves for Rook
-
-        # returns moves NOT accounting for other pieces on board. just the "shape" of movement of the piece.
-        # not sure if we should check that here or elsewhere, since some movement is more complex than just a shape
-        # for example, pawns, castling, etc.
-
-        # assuming self.position is [x,y] coord:
         moves = []
-        board_size = 8
+        board_size = 8  # use some passed in param for this later
         x = self.position[0]
         y = self.position[1]
         up = y
@@ -54,16 +51,40 @@ class Rook(ChessPiece):
         right = x
         while up < board_size - 1:
             up += 1
+            next_piece = board.squares[x][up].get_piece()  # create a global board variable to use here
+            if next_piece.color != self.color:
+                moves.append([x, up])
+                break
+            elif next_piece.color == self.color:
+                break
             moves.append([x, up])
         while down > 0:
             down -= 1
+            next_piece = board.squares[x][down].get_piece()
+            if next_piece.color != self.color:
+                moves.append([x, down])
+                break
+            elif next_piece.color == self.color:
+                break
             moves.append([x, down])
         while right < board_size - 1:
             right += 1
+            next_piece = board.squares[right][y].get_piece()
+            if next_piece.color != self.color:
+                moves.append([right, y])
+                break
+            elif next_piece.color == self.color:
+                break
             moves.append([right, y])
         while left > 0:
             left -= 1
-            moves.append([left, down])
+            next_piece = board.squares[left][y].get_piece()
+            if next_piece.color != self.color:
+                moves.append([left, y])
+                break
+            elif next_piece.color == self.color:
+                break
+            moves.append([left, y])
 
         return moves
 
