@@ -51,38 +51,42 @@ class Rook(ChessPiece):
         while up < board_size - 1:
             up += 1
             next_piece = board.squares[x][up].get_piece()  # create a global board variable to use here
-            if next_piece.color != self.color:
-                moves.append([x, up])
-                break
-            elif next_piece.color == self.color:
-                break
+            if next_piece:
+                if next_piece.color != self.color:
+                    moves.append([x, up])
+                    break
+                elif next_piece.color == self.color:
+                    break
             moves.append([x, up])
         while down > 0:
             down -= 1
             next_piece = board.squares[x][down].get_piece()
-            if next_piece.color != self.color:
-                moves.append([x, down])
-                break
-            elif next_piece.color == self.color:
-                break
+            if next_piece:
+                if next_piece.color != self.color:
+                    moves.append([x, down])
+                    break
+                elif next_piece.color == self.color:
+                    break
             moves.append([x, down])
         while right < board_size - 1:
             right += 1
             next_piece = board.squares[right][y].get_piece()
-            if next_piece.color != self.color:
-                moves.append([right, y])
-                break
-            elif next_piece.color == self.color:
-                break
+            if next_piece:
+                if next_piece.color != self.color:
+                    moves.append([right, y])
+                    break
+                elif next_piece.color == self.color:
+                    break
             moves.append([right, y])
         while left > 0:
             left -= 1
             next_piece = board.squares[left][y].get_piece()
-            if next_piece.color != self.color:
-                moves.append([left, y])
-                break
-            elif next_piece.color == self.color:
-                break
+            if next_piece:
+                if next_piece.color != self.color:
+                    moves.append([left, y])
+                    break
+                elif next_piece.color == self.color:
+                    break
             moves.append([left, y])
 
         return moves
