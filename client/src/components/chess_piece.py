@@ -16,7 +16,6 @@ class ChessPiece(ABC):
 
     @abstractmethod
     def find_moves(self):
-        # should this do anything in base class?
         pass
 
 
