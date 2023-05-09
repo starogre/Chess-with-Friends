@@ -141,7 +141,9 @@ public class TicTacToe {
 				return "TedAI Slain";
 			} else if(tedaiPositions.containsAll(l)) {
 				return "Slain by TedAI";
-			} else if(playerPositions.size() + tedaiPositions.size() == 9){
+			} 
+
+			if(playerPositions.size() + tedaiPositions.size() == 9){
 				return "GREG SIGINT";
 			
 			}
