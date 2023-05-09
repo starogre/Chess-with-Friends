@@ -38,7 +38,7 @@ class Knight(ChessPiece):
 
 
 class Rook(ChessPiece):
-    def find_moves(self):
+    def find_moves(self, board):
         # return result of algo to pass to state handler to check valid moves for Rook
         moves = []
         board_size = 8  # use some passed in param for this later
