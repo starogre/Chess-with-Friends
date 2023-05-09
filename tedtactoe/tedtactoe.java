@@ -142,12 +142,12 @@ public class TicTacToe {
 			} else if(tedaiPositions.containsAll(l)) {
 				return "Slain by TedAI";
 			} 
-
+	}
 			if(playerPositions.size() + tedaiPositions.size() == 9){
 				return "GREG SIGINT";
 			
 			}
-		}
+		
 
 		return "";
 	}
