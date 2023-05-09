@@ -4,5 +4,6 @@ from chess_piece import *
 from state_handler import StateHandler
 from game_controller import GameController
 
-game = GameController()
-game.start_game()
+gc = GameController()
+gc.start_game()
+

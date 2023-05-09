@@ -1,5 +1,6 @@
 from chess_piece import *
 
+
 class StateHandler:
 
     @staticmethod
@@ -46,4 +47,3 @@ class StateHandler:
                     board.squares[i][j].set_piece(King("WHITE", [i, j]))
                 if start_black_pieces[i][j] == 6:
                     board.squares[i][j].set_piece(King("BLACK", [i, j]))
-

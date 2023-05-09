@@ -1,9 +1,11 @@
 from state_handler import *
 from board import Board
 
+
 class GameController:
+    def __init__(self):
+        self.board = None
 
     def start_game(self):
-        board = Board()
-        StateHandler.setup_chess_pieces(board)
-
+        self.board = Board()
+        StateHandler.setup_chess_pieces(self.board)
