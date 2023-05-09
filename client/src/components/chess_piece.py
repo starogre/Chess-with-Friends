@@ -50,44 +50,44 @@ class Rook(ChessPiece):
         right = x
         while up < board_size - 1:
             up += 1
-            next_piece = board.squares[x][up].get_piece()  # create a global board variable to use here
+            next_piece = board.squares[up][x].get_piece()  # create a global board variable to use here
             if next_piece:
                 if next_piece.color != self.color:
-                    moves.append([x, up])
+                    moves.append([up, x])
                     break
                 elif next_piece.color == self.color:
                     break
-            moves.append([x, up])
+            moves.append([up, x])
         while down > 0:
             down -= 1
-            next_piece = board.squares[x][down].get_piece()
+            next_piece = board.squares[down][x].get_piece()
             if next_piece:
                 if next_piece.color != self.color:
-                    moves.append([x, down])
+                    moves.append([down, x])
                     break
                 elif next_piece.color == self.color:
                     break
-            moves.append([x, down])
+            moves.append([down, x])
         while right < board_size - 1:
             right += 1
-            next_piece = board.squares[right][y].get_piece()
+            next_piece = board.squares[y][right].get_piece()
             if next_piece:
                 if next_piece.color != self.color:
-                    moves.append([right, y])
+                    moves.append([y, right])
                     break
                 elif next_piece.color == self.color:
                     break
-            moves.append([right, y])
+            moves.append([y, right])
         while left > 0:
             left -= 1
-            next_piece = board.squares[left][y].get_piece()
+            next_piece = board.squares[y][left].get_piece()
             if next_piece:
                 if next_piece.color != self.color:
-                    moves.append([left, y])
+                    moves.append([y, left])
                     break
                 elif next_piece.color == self.color:
                     break
-            moves.append([left, y])
+            moves.append([y, left])
 
         return moves
 
