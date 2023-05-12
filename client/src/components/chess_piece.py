@@ -46,7 +46,7 @@ class Knight(ChessPiece):
             new_x, new_y = move
 
             if 0 <= new_x < board_size and 0 <= new_y < board_size:
-                next_piece = board.squares[new_x][new_y].get_peice()
+                next_piece = board.squares[new_x][new_y].get_piece()
 
                 if not next_piece or next_piece.color != self.color:
                     moves.append([new_x, new_y])
