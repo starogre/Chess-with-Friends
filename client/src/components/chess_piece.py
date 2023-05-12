@@ -32,9 +32,25 @@ class Bishop(ChessPiece):
 
 
 class Knight(ChessPiece):
-    def find_moves(self):
+    def find_moves(self, board):
         # return result of algo to pass to state handler to check valid moves for Knight
-        pass
+        moves = []
+        board_size = 8
+        x = self.position[0]
+        y = self.position[1]
+
+        potentialmoves = [[x - 2, y - 1], [x - 2, y + 1], [x - 1, y -2], [x - 1, y + 2],
+                          [x + 1, y - 2], [x + 1, y + 2], [x + 2, y - 1], [x + 2, y + 1]]
+
+        for move in potentialmoves:
+            new_x, new_y = move
+
+            if 0 <= new_x < board_size and 0 <= new_y < board_size:
+                next_piece = board.squares[new_x][new_y].get_peice()
+
+                if not next_piece or next_piece.color != self.color:
+                    moves.append([new_x, new_y])
+        return moves
 
 
 class Rook(ChessPiece):
