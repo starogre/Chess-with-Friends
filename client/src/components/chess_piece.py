@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+def is_in_bounds(board_size, x, y):
+        return 0 <= x < board_size and 0 <= y < board_size
 
 class ChessPiece(ABC):
     def __init__(self, color, position):
@@ -13,9 +15,6 @@ class ChessPiece(ABC):
     def move_piece(self, new_position):
         self.position = new_position
         self.has_moved = True
-
-    def is_in_bounds(self, board_size, x, y):
-        return 0 <= x < board_size and 0 <= y < board_size
 
     @abstractmethod
     def find_moves(self):
@@ -47,7 +46,7 @@ class Knight(ChessPiece):
         for move in landingSquares:
             new_x, new_y = move
 
-            if self.is_in_bounds(board_size, new_x, new_y):
+            if is_in_bounds(board_size, new_x, new_y):
                 square = board.squares[new_x][new_y]
                 target_piece = square.get_piece()
 
