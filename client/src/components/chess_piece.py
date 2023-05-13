@@ -43,7 +43,7 @@ class Knight(ChessPiece):
                           [x + 1, y - 2], [x + 1, y + 2], [x + 2, y - 1], [x + 2, y + 1]]
 
         for move in landingSquares:
-            new_x, new_y = move
+            new_y, new_x = move
 
             if is_in_bounds(board_size, new_y, new_x):
                 square = board.squares[new_y][new_x]
