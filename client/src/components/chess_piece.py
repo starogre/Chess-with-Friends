@@ -45,14 +45,14 @@ class Knight(ChessPiece):
         for move in landingSquares:
             new_x, new_y = move
 
-            if is_in_bounds(board_size, new_x, new_y):
+            if is_in_bounds(board_size, new_y, new_x):
                 square = board.squares[new_y][new_x]
                 target_piece = square.get_piece()
 
                 if target_piece and target_piece.color == self.color:
                     continue
 
-                moves.append([new_x, new_y])
+                moves.append([new_y, new_x])
 
         return moves
 
