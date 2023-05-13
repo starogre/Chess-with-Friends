@@ -37,8 +37,7 @@ class Knight(ChessPiece):
     def find_moves(self, board):
         moves = []
         board_size = len(board.squares)
-        x = self.position[0]
-        y = self.position[1]
+        x, y  = self.position
 
         landingSquares = [[x - 2, y - 1], [x - 2, y + 1], [x - 1, y -2], [x - 1, y + 2],
                           [x + 1, y - 2], [x + 1, y + 2], [x + 2, y - 1], [x + 2, y + 1]]
@@ -47,7 +46,7 @@ class Knight(ChessPiece):
             new_x, new_y = move
 
             if is_in_bounds(board_size, new_x, new_y):
-                square = board.squares[new_x][new_y]
+                square = board.squares[new_y][new_x]
                 target_piece = square.get_piece()
 
                 if target_piece and target_piece.color == self.color:
