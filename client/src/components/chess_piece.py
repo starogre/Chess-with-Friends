@@ -14,6 +14,9 @@ class ChessPiece(ABC):
         self.position = new_position
         self.has_moved = True
 
+    def is_in_bounds(self, board_size, x, y):
+        return 0 <= x < board_size and 0 <= y < board_size
+
     @abstractmethod
     def find_moves(self):
         pass
@@ -38,16 +41,17 @@ class Knight(ChessPiece):
         x = self.position[0]
         y = self.position[1]
 
-        potentialmoves = [[x - 2, y - 1], [x - 2, y + 1], [x - 1, y -2], [x - 1, y + 2],
+        landingSquares = [[x - 2, y - 1], [x - 2, y + 1], [x - 1, y -2], [x - 1, y + 2],
                           [x + 1, y - 2], [x + 1, y + 2], [x + 2, y - 1], [x + 2, y + 1]]
 
-        for move in potentialmoves:
+        for move in landingSquares:
             new_x, new_y = move
 
-            if 0 <= new_x < board_size and 0 <= new_y < board_size:
-                next_piece = board.squares[new_x][new_y].get_piece()
+            if self.is_in_bounds(board_size, new_x, new_y):
+                square = board.squares[new_x][new_y]
+                target_piece = square.get_piece()
 
-                if not next_piece and next_piece.color != self.color:
+                if target_piece and target_piece.color == self.color:
                     continue
 
                 moves.append([new_x, new_y])
