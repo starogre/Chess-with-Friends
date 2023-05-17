@@ -39,7 +39,6 @@ class Pawn(ChessPiece):
         self.moved_two_spaces = False
 
     def can_en_passant(self, board, target_row, target_col):
-        print("hello")
         board_size = len(board.squares)
         if not is_in_bounds(board_size, target_row, target_col):
             return False
@@ -58,15 +57,18 @@ class Pawn(ChessPiece):
         if is_enemy_piece(target_piece, left_adjacent_pawn) and isinstance(left_adjacent_pawn, Pawn) \
                 and left_adjacent_pawn.moved_once \
                 and left_adjacent_pawn.moved_two_spaces:
-            print(StateHandler.last_move)
+
             last_move = StateHandler.last_move
-            print(last_move)
+
+            # this successfully adds en passant left move without last_move considered --> en_passant_directions.append("left")
+
             if last_move is not None:
                 last_piece, last_target_row, last_target_col = last_move
                 if last_piece == left_adjacent_pawn and last_target_row == adjacent_pawn_row \
                         and last_target_col == left_adjacent_pawn_col:
                     en_passant_directions.append("left")
 
+        # temp disabled en passant to right----
         # if isinstance(right_adjacent_pawn, Pawn) and right_adjacent_pawn.moved_once and \
         #         right_adjacent_pawn.moved_two_spaces:
         #     last_move = StateHandler.last_move
@@ -132,10 +134,10 @@ class Pawn(ChessPiece):
                     #     moves.append([up, x])
                 if en_passant_moves:
                     if "left" in en_passant_moves:
-                        moves.append([y, x-1])
+                        moves.append([y-1, x-1])
                         print(moves)
                     if "right" in en_passant_moves:
-                        moves.append([y, x+1])
+                        moves.append([y+1, x+1])
 
             elif direction == "down":  # black piece
                 down += 1
