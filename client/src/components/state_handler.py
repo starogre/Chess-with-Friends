@@ -1,9 +1,18 @@
-from client.src.components.chess_piece import *
+from chess_piece import Pawn, Knight, Bishop, Rook, Queen, King
+
+last_move = None
+
 
 
 class StateHandler:
 
-    last_move = None
+    @staticmethod
+    def get_last_move(self):
+        return self.last_move
+
+    @staticmethod
+    def set_last_move(self, piece, target_col, target_row):
+        self.last_move = (piece, target_col, target_row)
 
     @staticmethod
     def setup_chess_pieces(board):
@@ -56,7 +65,8 @@ class StateHandler:
         # is_capture, is_stalemate, is_check, is_checkmate
 
         # check what last move was
-        last_move = (piece, target_row, target_col)
+        set_last_move(piece, target_row, target_col)
+        # last_move = (piece, target_row, target_col)
 
         # change state of Pawn if it moved 2 spaces for first move
         if isinstance(piece, Pawn):
@@ -65,4 +75,3 @@ class StateHandler:
                 piece.moved_two_spaces = True
             elif cur_pos[0] < target_row + 2 and piece.color == "BLACK":
                 piece.moved_two_spaces = True
-

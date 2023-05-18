@@ -1,7 +1,6 @@
-from board import Board
-from square import Square
-from chess_piece import *
-from state_handler import StateHandler
+
+from client.src.components.state_handler import StateHandler
+
 from game_controller import GameController
 
 gc = GameController()
@@ -25,12 +24,12 @@ pawn_black_left.position[1] = 1
 
 cur_pos = pawn_black_left.get_position()
 StateHandler.last_move = (pawn_black_left, cur_pos[0], cur_pos[1])
+last_move = StateHandler.last_move
 
 pawn_black_left.moved_two_spaces = True
-pawn_black_left.moved_once = True
 
 print("moved left black pawn and find spaces for white pawn:")
-print(pawn_white.find_moves(gc.board))
+print(pawn_white.find_moves(gc.board, last_move))
 
 
 
