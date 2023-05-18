@@ -5,14 +5,14 @@ def is_in_bounds(board_size, x, y):
     return 0 <= x < board_size and 0 <= y < board_size
 
 
-def is_enemy_piece(target_piece, adjacent_piece):
-    if target_piece is not None and target_piece.color != adjacent_piece.color:
+def is_enemy_piece(selected_piece, target_piece):
+    if target_piece is not None and selected_piece.color != target_piece.color:
         return True
     else:
         return False
 
 
-def can_en_passant2(board, selected_row, selected_col, last_move):
+def can_en_passant(board, selected_row, selected_col, last_move):
     # check state handler's last move
     if last_move is not None:
         # get the piece and its location who moved last from state handler
@@ -23,55 +23,12 @@ def can_en_passant2(board, selected_row, selected_col, last_move):
         right_piece = board.squares[selected_row][selected_col + 1].get_piece()
 
         # check if left piece is a pawn and moved 2 spaces or right piece is a pawn and moved 2 spaces
-        if (isinstance(left_piece, Pawn) and left_piece.moved_two_spaces) or \
-                (isinstance(right_piece, Pawn) and right_piece.moved_two_spaces):
-            # check if last move piece is in the same row as your selected pawn
-            if last_target_row == selected_row:
-                # check if last moved piece was on the left or right of your pawn, return
-                if last_piece == left_piece and last_target_col == selected_col - 1:
-                    return True, "left"
-                elif last_piece == right_piece and last_target_col == selected_col + 1:
-                    return True, "right"
+        if isinstance(left_piece, Pawn) and left_piece.moved_two_spaces and last_piece == left_piece:
+            return True, "left"
+        elif isinstance(right_piece, Pawn) and right_piece.moved_two_spaces and last_piece == right_piece:
+            return True, "right"
 
     return False, ""
-
-
-def can_en_passant(board, target_row, target_col, last_move):
-    board_size = len(board.squares)
-    if not is_in_bounds(board_size, target_row, target_col):
-        return False
-
-    target_piece = board.squares[target_row][target_col].get_piece()
-
-    adjacent_pawn_row = target_row
-    left_adjacent_pawn_col = target_col - 1
-    right_adjacent_pawn_col = target_col + 1
-
-    left_adjacent_pawn = board.squares[adjacent_pawn_row][left_adjacent_pawn_col].get_piece()
-    right_adjacent_pawn = board.squares[adjacent_pawn_row][right_adjacent_pawn_col].get_piece()
-
-    en_passant_directions = []
-
-    if is_enemy_piece(target_piece, left_adjacent_pawn) and isinstance(left_adjacent_pawn, Pawn) \
-            and left_adjacent_pawn.moved_two_spaces:
-
-        if last_move is not None:
-            last_piece, last_target_row, last_target_col = last_move
-            if last_piece == left_adjacent_pawn and last_target_row == adjacent_pawn_row \
-                    and last_target_col == left_adjacent_pawn_col:
-                en_passant_directions.append("left")
-
-    # temp disabled en passant to right----
-    # if isinstance(right_adjacent_pawn, Pawn) and right_adjacent_pawn.moved_once and \
-    #         right_adjacent_pawn.moved_two_spaces:
-    #     last_move = StateHandler.last_move
-    #     if last_move is not None:
-    #         last_piece, last_target_row, last_target_col = last_move
-    #         if last_piece == right_adjacent_pawn and last_target_row == adjacent_pawn_row \
-    #                 and last_target_col == right_adjacent_pawn_col:
-    #             en_passant_directions.append("right")
-
-    return tuple(en_passant_directions)
 
 
 class ChessPiece(ABC):
@@ -98,16 +55,13 @@ class Pawn(ChessPiece):
         self.moved_two_spaces = False
 
     def find_moves(self, board, last_move=None):
-        # return result of algo to pass to state handler to check valid moves for Pawn
         moves = []
         board_size = len(board.squares)
         y = self.position[0]
         x = self.position[1]
         up = y
         down = y
-        left = x
-        right = x
-        en_passant_move = can_en_passant2(board, y, x, last_move)
+        en_passant_move = can_en_passant(board, y, x, last_move)
         direction = None
 
         # add more directions if we add more players, etc
@@ -116,56 +70,55 @@ class Pawn(ChessPiece):
         elif self.color == "BLACK":
             direction = "down"
 
+        # diagonal attacks
+        if direction == "up":
+            if is_enemy_piece(self, board.squares[y - 1][x - 1].get_piece()):
+                moves.append([y - 1, x - 1])
+            if is_enemy_piece(self, board.squares[y - 1][x + 1].get_piece()):
+                moves.append([y - 1, x + 1])
+        elif direction == "down":
+            if is_enemy_piece(self, board.squares[y + 1][x - 1].get_piece()):
+                moves.append([y + 1, x - 1])
+            if is_enemy_piece(self, board.squares[y + 1][x + 1].get_piece()):
+                moves.append([y + 1, x + 1])
+
+        # moves based on if selected pawn has moved or not already
         if not self.has_moved:
-            if direction == "up":  # white piece
-                for i in range(2):
+            if direction == "up":
+                for i in range(2):  # white piece moving up 1 and 2
                     up -= 1
                     if is_in_bounds(board_size, up, x):
-                        next_piece = board.squares[up][x].get_piece()
-                        if next_piece:
-                            if next_piece.color != self.color:
-                                moves.append([up, x])
-                                break
-                            elif next_piece.color == self.color:
-                                break
-                        moves.append([up, x])
-            elif direction == "down":  # black piece
-                for i in range(2):
+                        if board.squares[up][x].is_empty():
+                            moves.append([up, x])
+            elif direction == "down":
+                for i in range(2):  # black piece moving down 1 and 2
                     down += 1
                     if is_in_bounds(board_size, down, x):
-                        next_piece = board.squares[down][x].get_piece()
-                        if next_piece:
-                            if next_piece.color != self.color:
-                                moves.append([down, x])
-                                break
-                            elif next_piece.color == self.color:
-                                break
-                        moves.append([down, x])
+                        if board.squares[down][x].is_empty():
+                            moves.append([down, x])
         else:
-            if direction == "up":  # white piece
+            if direction == "up":  # white piece moving up 1
                 up -= 1
                 if is_in_bounds(board_size, up, x):
                     if board.squares[up][x].is_empty():
                         moves.append([up, x])
-                    # next_piece = board.squares[up][x].get_piece()
-                    # if next_piece and next_piece.color != self.color:
-                    #     moves.append([up, x])
+                # en passant
                 if en_passant_move == (True, "left"):
                     moves.append([y - 1, x - 1])
                 elif en_passant_move == (True, "right"):
-                    moves.append([y + 1, x + 1])
+                    moves.append([y - 1, x + 1])
 
-            elif direction == "down":  # black piece
+            elif direction == "down":  # black piece moving down 1
                 down += 1
                 if is_in_bounds(board_size, down, x):
                     next_piece = board.squares[down][x].get_piece()
                     if next_piece and next_piece.color != self.color:
                         moves.append([down, x])
-
+                # en passant
                 if en_passant_move == (True, "left"):
                     moves.append([y + 1, x - 1])
                 elif en_passant_move == (True, "right"):
-                    moves.append([y - 1, x + 1])
+                    moves.append([y + 1, x + 1])
 
         return moves
 
