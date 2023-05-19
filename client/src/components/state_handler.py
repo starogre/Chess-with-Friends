@@ -3,6 +3,7 @@ from chess_piece import Pawn, Knight, Bishop, Rook, Queen, King
 last_move = None
 
 
+
 class StateHandler:
 
     @staticmethod
