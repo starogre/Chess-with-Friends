@@ -6,14 +6,6 @@ last_move = None
 class StateHandler:
 
     @staticmethod
-    def get_last_move(self):
-        return self.last_move
-
-    @staticmethod
-    def set_last_move(self, piece, target_col, target_row):
-        self.last_move = (piece, target_col, target_row)
-
-    @staticmethod
     def setup_chess_pieces(board):
         start_white_pieces = [[0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0],
@@ -64,7 +56,7 @@ class StateHandler:
         # is_capture, is_stalemate, is_check, is_checkmate
 
         # check what last move was
-        set_last_move(piece, target_row, target_col)
+        StateHandler.last_move = (piece, target_row, target_col)
         # last_move = (piece, target_row, target_col)
 
         # change state of Pawn if it moved 2 spaces for first move
