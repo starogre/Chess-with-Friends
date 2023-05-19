@@ -9,7 +9,7 @@ on:
       - 'development'
 
 jobs:
-  Run pytest -v:
+  run_pytest:
     runs-on: ubuntu-latest
     strategy:
       matrix:
