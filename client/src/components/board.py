@@ -1,4 +1,4 @@
-from square import Square
+from client.src.components.square import Square
 
 
 class Board:
