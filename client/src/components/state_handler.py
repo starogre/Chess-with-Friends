@@ -1,4 +1,4 @@
-from chess_piece import *
+from client.src.components.chess_piece import *
 
 
 class StateHandler:
