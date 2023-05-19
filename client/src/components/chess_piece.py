@@ -39,7 +39,7 @@ class Knight(ChessPiece):
         board_size = len(board.squares)
         x, y  = self.position
 
-        landingSquares = [[x - 2, y - 1], [x - 2, y + 1], [x - 1, y -2], [x - 1, y + 2],
+        landingSquares = [[x - 2, y - 1], [x - 2, y + 2], [x - 1, y -2], [x - 1, y + 2],
                           [x + 1, y - 2], [x + 1, y + 2], [x + 2, y - 1], [x + 2, y + 1]]
 
         for move in landingSquares:
