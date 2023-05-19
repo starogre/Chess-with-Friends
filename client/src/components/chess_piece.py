@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+def is_in_bounds(board_size, x, y):
+        return 0 <= x < board_size and 0 <= y < board_size
 
 class ChessPiece(ABC):
     def __init__(self, color, position):
@@ -32,9 +34,27 @@ class Bishop(ChessPiece):
 
 
 class Knight(ChessPiece):
-    def find_moves(self):
-        # return result of algo to pass to state handler to check valid moves for Knight
-        pass
+    def find_moves(self, board):
+        moves = []
+        board_size = len(board.squares)
+        x, y  = self.position
+
+        landingSquares = [[x - 2, y - 1], [x - 2, y + 1], [x - 1, y -2], [x - 1, y + 2],
+                          [x + 1, y - 2], [x + 1, y + 2], [x + 2, y - 1], [x + 2, y + 1]]
+
+        for move in landingSquares:
+            new_y, new_x = move
+
+            if is_in_bounds(board_size, new_y, new_x):
+                square = board.squares[new_y][new_x]
+                target_piece = square.get_piece()
+
+                if target_piece and target_piece.color == self.color:
+                    continue
+
+                moves.append([new_y, new_x])
+
+        return moves
 
 
 class Rook(ChessPiece):
