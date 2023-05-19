@@ -1,2 +1,4 @@
 .idea/
 client/src/components/__pycache__
+client/unit_tests/.pytest_cache/
+
