@@ -42,6 +42,7 @@ def test_knight_find_moves_full_board_allied_pieces():
     assert knight.find_moves(board) == expected_moves
     knight = Knight("White", (8, 8))
     assert knight.find_moves(board) == expected_moves
+    assert knight.find_moves(board) == expected_moves
 
 
 def test_knight_find_moves_with_enemy_pieces():
