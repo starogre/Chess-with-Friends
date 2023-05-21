@@ -72,15 +72,23 @@ class Pawn(ChessPiece):
 
         # diagonal attacks
         if direction == "up":
-            if is_enemy_piece(self, board.squares[y - 1][x - 1].get_piece()):
-                moves.append([y - 1, x - 1])
-            if is_enemy_piece(self, board.squares[y - 1][x + 1].get_piece()):
-                moves.append([y - 1, x + 1])
+            move_y, move_x = y - 1, x - 1
+            if is_in_bounds(board_size, move_y, move_x):
+                if is_enemy_piece(self, board.squares[move_y][move_x].get_piece()):
+                    moves.append([move_y, move_x])
+            move_y, move_x = y - 1, x + 1
+            if is_in_bounds(board_size, move_y, move_x):
+                if is_enemy_piece(self, board.squares[y - 1][x + 1].get_piece()):
+                    moves.append([move_y, move_x])
         elif direction == "down":
-            if is_enemy_piece(self, board.squares[y + 1][x - 1].get_piece()):
-                moves.append([y + 1, x - 1])
-            if is_enemy_piece(self, board.squares[y + 1][x + 1].get_piece()):
-                moves.append([y + 1, x + 1])
+            move_y, move_x = y + 1, x - 1
+            if is_in_bounds(board_size, move_y, move_x):
+                if is_enemy_piece(self, board.squares[y + 1][x - 1].get_piece()):
+                    moves.append([move_y, move_x])
+            move_y, move_x = y + 1, x + 1
+            if is_in_bounds(board_size, move_y, move_x):
+                if is_enemy_piece(self, board.squares[y + 1][x + 1].get_piece()):
+                    moves.append([move_y, move_x])
 
         # moves based on if selected pawn has moved or not already
         if not self.has_moved:
