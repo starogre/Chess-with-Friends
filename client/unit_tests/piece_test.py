@@ -52,7 +52,7 @@ def test_pawn_find_moves_full_board_allied_pieces():
     assert pawn.find_moves(board) == expected_moves
 
 
-def test_pawn_find_moves_enemy_pieces():
+def test_pawn_find_moves_enemy_pieces_white():
     board = Board()
 
     for row in board.squares:
@@ -138,7 +138,7 @@ def test_pawn_corners_and_edges():
     assert pawn.find_moves(board) == expected_moves
 
 
-def test_pawn_en_passant():
+def test_pawn_en_passant_white():
     board = Board()
 
     for row in board.squares:
@@ -168,6 +168,39 @@ def test_pawn_en_passant():
     # our pawn can en passant to right diagonal or move up 1
     game_last_move = (pawn_enemy, 3, 3)
     expected_moves = [[2, 2], [2, 3]]
+    assert pawn.find_moves(board, game_last_move) == expected_moves
+
+
+def test_pawn_en_passant_black():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    pawn = Pawn("BLACK", (4, 5))
+    pawn.has_moved = True
+
+    # create an enemy pawn that has moved 2 spaces next to our pawn on left
+    pawn_enemy = Pawn("WHITE", (4, 4))
+    board.squares[4][4].set_piece(pawn_enemy)
+    pawn_enemy.has_moved = True
+    pawn_enemy.moved_two_spaces = True
+
+    # our pawn can en passant to left diagonal or move up 1
+    game_last_move = (pawn_enemy, 4, 4)
+    expected_moves = [[5, 5], [5, 4]]
+    assert pawn.find_moves(board, game_last_move) == expected_moves
+
+    # create an enemy pawn that has moved 2 spaces next to our pawn on right
+    pawn_enemy = Pawn("WHITE", (4, 6))
+    board.squares[4][6].set_piece(pawn_enemy)
+    pawn_enemy.has_moved = True
+    pawn_enemy.moved_two_spaces = True
+
+    # our pawn can en passant to right diagonal or move up 1
+    game_last_move = (pawn_enemy, 4, 6)
+    expected_moves = [[5, 5], [5, 6]]
     assert pawn.find_moves(board, game_last_move) == expected_moves
 
 
