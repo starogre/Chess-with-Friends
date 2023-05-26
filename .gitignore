@@ -1,4 +1,5 @@
 .idea/
+.pytest_cache/
 client/src/components/__pycache__
-client/unit_tests/.pytest_cache/
-
+client/unit_tests/__pycache__/
+client/src/components/__pycache__/

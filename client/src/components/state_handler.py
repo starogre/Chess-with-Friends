@@ -1,4 +1,6 @@
-from client.src.components.chess_piece import *
+from client.src.components.chess_piece import Pawn, Knight, Bishop, Rook, Queen, King
+
+last_move = None
 
 
 class StateHandler:
@@ -47,3 +49,20 @@ class StateHandler:
                     board.squares[i][j].set_piece(King("WHITE", [i, j]))
                 if start_black_pieces[i][j] == 6:
                     board.squares[i][j].set_piece(King("BLACK", [i, j]))
+
+    @staticmethod
+    def execute_move(board, piece, target_row, target_col):
+        # move_is_valid()
+        # is_capture, is_stalemate, is_check, is_checkmate
+
+        # check what last move was
+        StateHandler.last_move = (piece, target_row, target_col)
+        # last_move = (piece, target_row, target_col)
+
+        # change state of Pawn if it moved 2 spaces for first move
+        if isinstance(piece, Pawn):
+            cur_pos = piece.get_position()
+            if cur_pos[0] > target_row - 2 and piece.color == "WHITE":
+                piece.moved_two_spaces = True
+            elif cur_pos[0] < target_row + 2 and piece.color == "BLACK":
+                piece.moved_two_spaces = True

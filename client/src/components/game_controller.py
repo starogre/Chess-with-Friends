@@ -1,4 +1,4 @@
-from state_handler import *
+from state_handler import StateHandler
 from board import Board
 
 
@@ -8,4 +8,7 @@ class GameController:
 
     def start_game(self):
         self.board = Board()
+
         StateHandler.setup_chess_pieces(self.board)
+
+
