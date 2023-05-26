@@ -60,8 +60,8 @@ def test_pawn_find_moves_enemy_pieces():
             square.set_piece(None)
 
     # setup enemy pieces on the pawns landing squares
-    board.squares[4][0].set_piece(Pawn("BLACK", (3, 3)))
-    board.squares[5][1].set_piece(Pawn("BLACK", (3, 5)))
+    board.squares[4][0].set_piece(Pawn("BLACK", (4, 0)))
+    board.squares[5][1].set_piece(Pawn("BLACK", (5, 1)))
     board.squares[3][4].set_piece(Pawn("BLACK", (3, 4)))
     board.squares[3][3].set_piece(Pawn("BLACK", (3, 3)))
     board.squares[3][5].set_piece(Pawn("BLACK", (3, 5)))
@@ -75,6 +75,32 @@ def test_pawn_find_moves_enemy_pieces():
     pawn = Pawn("WHITE", (4, 4))
     pawn.has_moved = True
     expected_moves = [[3, 3], [3, 5]]
+    assert pawn.find_moves(board) == expected_moves
+
+
+def test_pawn_find_moves_enemy_pieces_black():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    # setup enemy pieces on the pawns landing squares
+    board.squares[3][0].set_piece(Pawn("WHITE", (3, 0)))
+    board.squares[2][1].set_piece(Pawn("WHITE", (2, 1)))
+    board.squares[4][3].set_piece(Pawn("WHITE", (4, 3)))
+    board.squares[4][4].set_piece(Pawn("WHITE", (4, 4)))
+    board.squares[4][5].set_piece(Pawn("WHITE", (4, 5)))
+
+    # pawn hasn't moved yet
+    pawn = Pawn("BLACK", (1, 0))
+    expected_moves = [[2, 1], [2, 0]]
+    assert pawn.find_moves(board) == expected_moves
+
+    # pawn moved already, can't move up but can attack diagonally
+    pawn = Pawn("BLACK", (3, 4))
+    pawn.has_moved = True
+    expected_moves = [[4, 3], [4, 5]]
     assert pawn.find_moves(board) == expected_moves
 
 

@@ -13,20 +13,18 @@ def is_enemy_piece(selected_piece, target_piece):
 
 
 def can_en_passant(board, selected_row, selected_col, last_move):
-    # check state handler's last move
     if last_move is not None:
-        # get the piece and its location who moved last from state handler
         last_piece, last_target_row, last_target_col = last_move
 
-        # get the pieces to left and right of selected pawn
-        left_piece = board.squares[selected_row][selected_col - 1].get_piece()
-        right_piece = board.squares[selected_row][selected_col + 1].get_piece()
-
-        # check if left piece is a pawn and moved 2 spaces or right piece is a pawn and moved 2 spaces
-        if isinstance(left_piece, Pawn) and left_piece.moved_two_spaces and last_piece == left_piece:
-            return True, "left"
-        elif isinstance(right_piece, Pawn) and right_piece.moved_two_spaces and last_piece == right_piece:
-            return True, "right"
+        board_size = len(board.squares)
+        if is_in_bounds(board_size, selected_row, selected_col - 1):
+            left_piece = board.squares[selected_row][selected_col - 1].get_piece()
+            if isinstance(left_piece, Pawn) and left_piece.moved_two_spaces and last_piece == left_piece:
+                return True, "left"
+        if is_in_bounds(board_size, selected_row, selected_col + 1):
+            right_piece = board.squares[selected_row][selected_col + 1].get_piece()
+            if isinstance(right_piece, Pawn) and right_piece.moved_two_spaces and last_piece == right_piece:
+                return True, "right"
 
     return False, ""
 
@@ -119,9 +117,9 @@ class Pawn(ChessPiece):
             elif direction == "down":  # black piece moving down 1
                 down += 1
                 if is_in_bounds(board_size, down, x):
-                    next_piece = board.squares[down][x].get_piece()
-                    if next_piece and next_piece.color != self.color:
-                        moves.append([down, x])
+                    if is_in_bounds(board_size, down, x):
+                        if board.squares[down][x].is_empty():
+                            moves.append([down, x])
                 # en passant
                 if en_passant_move == (True, "left"):
                     moves.append([y + 1, x - 1])

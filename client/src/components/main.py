@@ -3,8 +3,18 @@ from client.src.components.state_handler import StateHandler
 
 from game_controller import GameController
 
+
 gc = GameController()
 gc.start_game()
+
+# test no last move
+# grab a white pawn on right edge of board
+pawn_white_z = gc.board.squares[6][1].get_piece()
+pawn_white_x = gc.board.squares[4][4].get_piece()
+print(pawn_white_x)
+# print all moves white pawn can make
+print("white pawn #1 can attack a pawn diagonal left, move up one space, or en passant to right:")
+print(pawn_white_z.find_moves(gc.board))
 
 # grab a white pawn and move it up 3 spaces
 pawn_white = gc.board.squares[6][2].get_piece()
