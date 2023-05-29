@@ -138,8 +138,79 @@ class Pawn(ChessPiece):
 
 class Bishop(ChessPiece):
     def find_moves(self, board):
-        # return result of algo to pass to state handler to check valid moves for Bishop
-        pass
+        moves = []
+        board_size = len(board.squares)
+        y, x = self.position
+        up = y
+        down = y
+        left = x
+        right = x
+
+        # down-right
+        while down < board_size - 1 and right < board_size - 1:
+            down += 1
+            right += 1
+            if is_in_bounds(board_size, down, right):
+                next_piece = board.squares[down][right].get_piece()
+                if next_piece:
+                    if next_piece.color != self.color:
+                        moves.append([down, right])
+                        break
+                    elif next_piece.color == self.color:
+                        break
+                moves.append([down, right])
+        down = y  # reset directions to be used in other loops
+        right = x
+
+        # up-right
+        while up > 0 and right < board_size - 1:
+            up -= 1
+            right += 1
+            print(up, right)
+            if is_in_bounds(board_size, up, right):
+                next_piece = board.squares[up][right].get_piece()
+                print(next_piece)
+                if next_piece:
+                    if next_piece.color != self.color:
+                        moves.append([up, right])
+                        break
+                    elif next_piece.color == self.color:
+                        break
+                moves.append([up, right])
+        up = y
+
+        # down-left
+        while down < board_size - 1 and left > 0:
+            down += 1
+            left -= 1
+            print(down, left)
+            if is_in_bounds(board_size, down, left):
+                next_piece = board.squares[down][left].get_piece()
+                print(next_piece)
+                if next_piece:
+                    if next_piece.color != self.color:
+                        moves.append([down, left])
+                        break
+                    elif next_piece.color == self.color:
+                        break
+                moves.append([down, left])
+        left = x
+
+        # up-left
+        while up > 0 and left > 0:
+            up -= 1
+            left -= 1
+            if is_in_bounds(board_size, up, left):
+                next_piece = board.squares[up][left].get_piece()
+                if next_piece:
+                    if next_piece.color != self.color:
+                        moves.append([up, left])
+                        break
+                    elif next_piece.color == self.color:
+                        break
+                moves.append([up, left])
+
+        return moves
 
 
 class Knight(ChessPiece):
@@ -226,8 +297,131 @@ class Rook(ChessPiece):
 
 class Queen(ChessPiece):
     def find_moves(self, board):
-        # return result of algo to pass to state handler to check valid moves for Queen
-        pass
+        moves = []
+        board_size = len(board.squares)
+        y, x = self.position
+        up = y
+        down = y
+        left = x
+        right = x
+
+        # down-right
+        while down < board_size - 1 and right < board_size - 1:
+            down += 1
+            right += 1
+            if is_in_bounds(board_size, down, right):
+                next_piece = board.squares[down][right].get_piece()
+                if next_piece:
+                    if next_piece.color != self.color:
+                        moves.append([down, right])
+                        break
+                    elif next_piece.color == self.color:
+                        break
+                moves.append([down, right])
+        down = y  # reset directions to be used in other loops
+        right = x
+
+        # up-right
+        while up > 0 and right < board_size - 1:
+            up -= 1
+            right += 1
+            print(up, right)
+            if is_in_bounds(board_size, up, right):
+                next_piece = board.squares[up][right].get_piece()
+                print(next_piece)
+                if next_piece:
+                    if next_piece.color != self.color:
+                        moves.append([up, right])
+                        break
+                    elif next_piece.color == self.color:
+                        break
+                moves.append([up, right])
+        up = y
+        right = x
+
+        # down-left
+        while down < board_size - 1 and left > 0:
+            down += 1
+            left -= 1
+            print(down, left)
+            if is_in_bounds(board_size, down, left):
+                next_piece = board.squares[down][left].get_piece()
+                print(next_piece)
+                if next_piece:
+                    if next_piece.color != self.color:
+                        moves.append([down, left])
+                        break
+                    elif next_piece.color == self.color:
+                        break
+                moves.append([down, left])
+        left = x
+        down = y
+
+        # up-left
+        while up > 0 and left > 0:
+            up -= 1
+            left -= 1
+            if is_in_bounds(board_size, up, left):
+                next_piece = board.squares[up][left].get_piece()
+                if next_piece:
+                    if next_piece.color != self.color:
+                        moves.append([up, left])
+                        break
+                    elif next_piece.color == self.color:
+                        break
+                moves.append([up, left])
+        up = y
+        left = x
+
+        while down < board_size - 1:
+            down += 1
+            if is_in_bounds(board_size, down, x):
+                next_piece = board.squares[down][x].get_piece()
+                if next_piece:
+                    if next_piece.color != self.color:
+                        moves.append([down, x])
+                        break
+                    elif next_piece.color == self.color:
+                        break
+                moves.append([down, x])
+
+        while up > 0:
+            up -= 1
+            if is_in_bounds(board_size, up, x):
+                next_piece = board.squares[up][x].get_piece()
+                if next_piece:
+                    if next_piece.color != self.color:
+                        moves.append([up, x])
+                        break
+                    elif next_piece.color == self.color:
+                        break
+                moves.append([up, x])
+
+        while right < board_size - 1:
+            right += 1
+            if is_in_bounds(board_size, y, right):
+                next_piece = board.squares[y][right].get_piece()
+                if next_piece:
+                    if next_piece.color != self.color:
+                        moves.append([y, right])
+                        break
+                    elif next_piece.color == self.color:
+                        break
+                moves.append([y, right])
+
+        while left > 0:
+            left -= 1
+            if is_in_bounds(board_size, y, left):
+                next_piece = board.squares[y][left].get_piece()
+                if next_piece:
+                    if next_piece.color != self.color:
+                        moves.append([y, left])
+                        break
+                    elif next_piece.color == self.color:
+                        break
+                moves.append([y, left])
+
+        return moves
 
 
 class King(ChessPiece):
