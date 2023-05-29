@@ -1,5 +1,6 @@
 from client.src.components.state_handler import *
 from client.src.components.board import *
+from client.src.components.player import *
 
 
 def test_select_piece():
@@ -26,13 +27,30 @@ def test_select_piece():
     assert StateHandler.select_piece(board, square) == False
 
 
-
 def test_select_destination():
     pass
 
 
 def test_find_all_player_moves():
-    pass
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    piece1 = Rook("WHITE", (0, 0))
+    piece2 = Rook("WHITE", (7, 7))
+    board.squares[0][0].set_piece(piece1)
+    board.squares[7][7].set_piece(piece2)
+
+    player = Player("WHITE")
+
+    expected_all_moves = [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0],
+                          [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7],
+                          [6, 7], [5, 7], [4, 7], [3, 7], [2, 7], [1, 7], [0, 7],
+                          [7, 6], [7, 5], [7, 4], [7, 3], [7, 2], [7, 1], [7, 0]]
+
+    assert StateHandler.find_all_player_moves(board, player) == expected_all_moves
 
 
 def test_find_all_enemy_moves():

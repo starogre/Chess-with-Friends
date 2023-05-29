@@ -1,5 +1,5 @@
 class Player:
-    def __init__(self, color, active, captured_pieces=None, pieces=None):
+    def __init__(self, color, active=None, captured_pieces=None, pieces=None):
         self.color = color
         self.active = active
         self.captured_pieces = captured_pieces
