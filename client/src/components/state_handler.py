@@ -54,29 +54,32 @@ class StateHandler:
     @staticmethod
     def select_piece(board, square):
         if not square.is_empty():
-            for squares in board:
-                squares.deselect()
-            square.select()
-            return square.get_piece()
+            if not square.selected:
+                for row in board.squares:
+                    for squares in row:
+                        squares.deselect()
+                square.select()
 
     @staticmethod
     def select_destination(square):
         return [square.row, square.col]
 
     @staticmethod
-    def find_all_moves(board):
+    def find_all_player_moves(board, player):
         all_moves = []
         for square in board.squares:
             piece = square.get_piece()
-            all_moves.append(piece.get_position())
+            if piece.color == player.color:
+                all_moves.append(piece.get_position())
         return all_moves
 
     @staticmethod
-    def find_all_enemy_moves(board):
+    def find_all_enemy_moves(board, player):
         all_moves = []
         for square in board.squares:
             piece = square.get_piece()
-            all_moves.append(piece.get_position())
+            if piece.color != player.color:
+                all_moves.append(piece.get_position())
         return all_moves
 
     @staticmethod

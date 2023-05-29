@@ -22,3 +22,6 @@ class Player:
 
     def get_pieces(self):
         return self.pieces
+
+    def set_pieces(self, pieces):
+        self.pieces = pieces
