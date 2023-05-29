@@ -12,6 +12,13 @@ def is_enemy_piece(selected_piece, target_piece):
         return False
 
 
+def is_ally_piece(selected_piece, target_piece):
+    if target_piece is not None and selected_piece.color == target_piece.color:
+        return True
+    else:
+        return False
+
+
 def can_en_passant(board, selected_row, selected_col, last_move):
     if last_move is not None:
         last_piece, last_target_row, last_target_col = last_move
@@ -76,16 +83,16 @@ class Pawn(ChessPiece):
                     moves.append([move_y, move_x])
             move_y, move_x = y - 1, x + 1
             if is_in_bounds(board_size, move_y, move_x):
-                if is_enemy_piece(self, board.squares[y - 1][x + 1].get_piece()):
+                if is_enemy_piece(self, board.squares[move_y][move_x].get_piece()):
                     moves.append([move_y, move_x])
         elif direction == "down":
             move_y, move_x = y + 1, x - 1
             if is_in_bounds(board_size, move_y, move_x):
-                if is_enemy_piece(self, board.squares[y + 1][x - 1].get_piece()):
+                if is_enemy_piece(self, board.squares[move_y][move_x].get_piece()):
                     moves.append([move_y, move_x])
             move_y, move_x = y + 1, x + 1
             if is_in_bounds(board_size, move_y, move_x):
-                if is_enemy_piece(self, board.squares[y + 1][x + 1].get_piece()):
+                if is_enemy_piece(self, board.squares[move_y][move_x].get_piece()):
                     moves.append([move_y, move_x])
 
         # moves based on if selected pawn has moved or not already
@@ -220,6 +227,20 @@ class Queen(ChessPiece):
 
 
 class King(ChessPiece):
-    def find_moves(self, board):
-        # return result of algo to pass to state handler to check valid moves for King
-        pass
+    def find_moves(self, board, last_move=None):
+        moves = []
+        board_size = len(board.squares)
+        y, x = self.position
+
+        landing_squares = [[y - 1, x - 1], [y - 1, x + 1], [y + 1, x - 1], [y + 1, x + 1],
+                           [y + 1, x], [y - 1, x], [y, x + 1], [y, x - 1]]
+        for move in landing_squares:
+            new_y, new_x = move
+            if is_in_bounds(board_size, new_y, new_x):
+                target_piece = board.squares[new_y][new_x].get_piece()
+                if target_piece and is_ally_piece(self, board.squares[new_y][new_x].get_piece()):
+                    continue
+                moves.append([new_y, new_x])
+
+        return moves
+

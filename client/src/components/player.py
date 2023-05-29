@@ -1,8 +1,9 @@
 class Player:
-    def __init__(self, color, active, captured_pieces=None):
+    def __init__(self, color, active, captured_pieces=None, pieces=None):
         self.color = color
         self.active = active
         self.captured_pieces = captured_pieces
+        self.pieces = pieces
 
     def set_color(self, color):
         self.color = color
@@ -16,6 +17,8 @@ class Player:
     def get_active(self):
         return self.active
 
-    def get_pieces(self):
+    def get_captured_pieces(self):
         return self.captured_pieces
 
+    def get_pieces(self):
+        return self.pieces
