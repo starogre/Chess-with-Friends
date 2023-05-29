@@ -313,7 +313,8 @@ def test_rook_find_moves_empty_board():
             square.set_piece(None)
 
     rook = Rook("White", (4, 4))
-    expected_moves = [[2, 3], [2, 5], [3, 2], [3, 6], [5, 2], [5, 6], [6, 3], [6, 5]]
+    expected_moves = [[5, 4], [6, 4], [7, 4], [3, 4], [2, 4], [1, 4], [0, 4],
+                      [4, 5], [4, 6], [4, 7], [4, 3], [4, 2], [4, 1], [4, 0]]
     assert rook.find_moves(board) == expected_moves
 
 
@@ -342,17 +343,13 @@ def test_rook_find_moves_with_enemy_pieces():
             square.set_piece(None)
 
     # setup enemy pieces on the knights landing squares
-    board.squares[2][3].set_piece(Rook("Black", (2, 3)))
-    board.squares[2][5].set_piece(Rook("Black", (2, 5)))
-    board.squares[3][2].set_piece(Rook("Black", (3, 2)))
-    board.squares[3][6].set_piece(Rook("Black", (3, 6)))
-    board.squares[5][2].set_piece(Rook("Black", (5, 2)))
-    board.squares[5][6].set_piece(Rook("Black", (5, 6)))
-    board.squares[6][3].set_piece(Rook("Black", (6, 3)))
-    board.squares[6][5].set_piece(Rook("Black", (6, 5)))
+    board.squares[2][4].set_piece(Rook("Black", (2, 4)))
+    board.squares[6][4].set_piece(Rook("Black", (6, 4)))
+    board.squares[4][2].set_piece(Rook("Black", (4, 2)))
+    board.squares[4][6].set_piece(Rook("Black", (4, 6)))
 
     rook = Rook("White", (4, 4))
-    expected_moves = [[2, 3], [2, 5], [3, 2], [3, 6], [5, 2], [5, 6], [6, 3], [6, 5]]
+    expected_moves = [[5, 4], [6, 4], [3, 4], [2, 4], [4, 5], [4, 6], [4, 3], [4, 2]]
     assert rook.find_moves(board) == expected_moves
 
 
@@ -364,23 +361,28 @@ def test_rook_find_moves_from_corners_and_edges():
             square.set_piece(None)
 
     rook = Rook("White", (0, 0))
-    expected_moves = [[1, 2], [2, 1]]
+    expected_moves = [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0],
+                      [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7]]
     assert rook.find_moves(board) == expected_moves
 
     rook = Rook("White", [0, 7])
-    expected_moves = [[1, 5], [2, 6]]
+    expected_moves = [[1, 7], [2, 7], [3, 7], [4, 7], [5, 7], [6, 7], [7, 7],
+                      [0, 6], [0, 5], [0, 4], [0, 3], [0, 2], [0, 1], [0, 0]]
     assert rook.find_moves(board) == expected_moves
 
     rook = Rook("White", [7, 0])
-    expected_moves = [[5, 1], [6, 2]]
+    expected_moves = [[6, 0], [5, 0], [4, 0], [3, 0], [2, 0], [1, 0], [0, 0],
+                      [7, 1], [7, 2], [7, 3], [7, 4], [7, 5], [7, 6], [7, 7]]
     assert rook.find_moves(board) == expected_moves
 
     rook = Rook("White", [7, 7])
-    expected_moves = [[5, 6], [6, 5]]
+    expected_moves = [[6, 7], [5, 7], [4, 7], [3, 7], [2, 7], [1, 7], [0, 7],
+                      [7, 6], [7, 5], [7, 4], [7, 3], [7, 2], [7, 1], [7, 0]]
     assert rook.find_moves(board) == expected_moves
 
     rook = Rook("White", (4, 0))
-    expected_moves = [[2, 1], [3, 2], [5, 2], [6, 1]]
+    expected_moves = [[5, 0], [6, 0], [7, 0], [3, 0], [2, 0], [1, 0], [0, 0],
+                      [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6], [4, 7]]
     assert rook.find_moves(board) == expected_moves
 
 

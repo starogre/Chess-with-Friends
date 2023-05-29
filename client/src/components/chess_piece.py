@@ -170,52 +170,56 @@ class Rook(ChessPiece):
     def find_moves(self, board):
         moves = []
         board_size = len(board.squares)
-        x = self.position[0]
-        y = self.position[1]
+        y = self.position[0]
+        x = self.position[1]
         up = y
         down = y
         left = x
         right = x
-        while up < board_size - 1:
-            up += 1
-            next_piece = board.squares[up][x].get_piece()
-            if next_piece:
-                if next_piece.color != self.color:
-                    moves.append([up, x])
-                    break
-                elif next_piece.color == self.color:
-                    break
-            moves.append([up, x])
-        while down > 0:
-            down -= 1
-            next_piece = board.squares[down][x].get_piece()
-            if next_piece:
-                if next_piece.color != self.color:
-                    moves.append([down, x])
-                    break
-                elif next_piece.color == self.color:
-                    break
-            moves.append([down, x])
+        while down < board_size - 1:
+            down += 1
+            if is_in_bounds(board_size, down, x):
+                next_piece = board.squares[down][x].get_piece()
+                if next_piece:
+                    if next_piece.color != self.color:
+                        moves.append([down, x])
+                        break
+                    elif next_piece.color == self.color:
+                        break
+                moves.append([down, x])
+        while up > 0:
+            up -= 1
+            if is_in_bounds(board_size, up, x):
+                next_piece = board.squares[up][x].get_piece()
+                if next_piece:
+                    if next_piece.color != self.color:
+                        moves.append([up, x])
+                        break
+                    elif next_piece.color == self.color:
+                        break
+                moves.append([up, x])
         while right < board_size - 1:
             right += 1
-            next_piece = board.squares[y][right].get_piece()
-            if next_piece:
-                if next_piece.color != self.color:
-                    moves.append([y, right])
-                    break
-                elif next_piece.color == self.color:
-                    break
-            moves.append([y, right])
+            if is_in_bounds(board_size, y, right):
+                next_piece = board.squares[y][right].get_piece()
+                if next_piece:
+                    if next_piece.color != self.color:
+                        moves.append([y, right])
+                        break
+                    elif next_piece.color == self.color:
+                        break
+                moves.append([y, right])
         while left > 0:
             left -= 1
-            next_piece = board.squares[y][left].get_piece()
-            if next_piece:
-                if next_piece.color != self.color:
-                    moves.append([y, left])
-                    break
-                elif next_piece.color == self.color:
-                    break
-            moves.append([y, left])
+            if is_in_bounds(board_size, y, left):
+                next_piece = board.squares[y][left].get_piece()
+                if next_piece:
+                    if next_piece.color != self.color:
+                        moves.append([y, left])
+                        break
+                    elif next_piece.color == self.color:
+                        break
+                moves.append([y, left])
 
         return moves
 
