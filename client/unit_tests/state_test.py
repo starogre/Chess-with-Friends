@@ -12,23 +12,54 @@ def test_select_piece():
 
     piece = King("WHITE", (0, 0))
     square = board.squares[0][0]
+    square.set_piece(piece)
     square.select()
+
+    StateHandler.select_square(board, square)
+    assert square.selected == True
+
+    new_piece = Queen("WHITE", (4, 4))
+    new_square = board.squares[4][4]
+    new_square.set_piece(new_piece)
+
+    StateHandler.select_square(board, new_square)
+    assert square.selected == False
+    assert new_square.selected == True
+
+    StateHandler.select_square(board, square)
+    assert square.selected == True
+    assert new_square.selected == False
+
+
+def test_get_piece_on_selected_square():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    piece = King("WHITE", (4, 4))
+    square = board.squares[4][4]
     square.set_piece(piece)
 
-    assert StateHandler.select_piece(board, square) == True
+    assert StateHandler.get_selected_piece_on_square(board) is None
 
-    new_square = board.squares[4][4]
+    StateHandler.select_square(board, square)
 
-    assert StateHandler.select_piece(board, new_square) == False
-
-    new_square.select()
-
-    assert StateHandler.select_piece(board, new_square) == True
-    assert StateHandler.select_piece(board, square) == False
+    assert StateHandler.get_selected_piece_on_square(board) == piece
 
 
 def test_select_destination():
-    pass
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    row = 3
+    col = 4
+
+    assert StateHandler.select_destination(board, 3, 4) == board.squares[3][4]
 
 
 def test_find_all_player_moves():

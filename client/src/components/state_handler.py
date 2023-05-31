@@ -52,7 +52,7 @@ class StateHandler:
                     board.squares[i][j].set_piece(King("BLACK", [i, j]))
 
     @staticmethod
-    def select_piece(board, square):
+    def select_square(board, square):
         if not square.is_empty():
             if not square.selected:
                 for row in board.squares:
@@ -61,8 +61,15 @@ class StateHandler:
                 square.select()
 
     @staticmethod
-    def select_destination(square):
-        return [square.row, square.col]
+    def get_selected_piece_on_square(board):
+        for row in board.squares:
+            for squares in row:
+                if squares.selected:
+                    return squares.get_piece()
+
+    @staticmethod
+    def select_destination(board, target_row, target_col):
+        return board.squares[target_row][target_col]
 
     @staticmethod
     def find_all_player_moves(board, player):
@@ -86,12 +93,26 @@ class StateHandler:
         return all_moves
 
     @staticmethod
-    def move_is_valid(board, piece, target_row, target_col, player):
+    def move_is_valid(board, piece, target_row, target_col, player, player_king):
         possible_moves = piece.find_moves(board)
         if player.color == piece.color:
             for move in possible_moves:
                 if move == [target_row, target_col]:
-                    return True
+                    '''
+                    move piece temporarily to a new space, calculate enemy moves, check if King is not in check
+                    otherwise, reset the temp movements
+                    '''
+                    saved_row = piece.position[0]
+                    saved_col = piece.position[1]
+                    board.squares[piece.get_position[0]][piece.get_position[1]].set_piece(None)
+                    board.squares[target_row][target_col].set_piece(piece)
+                    enemy_moves = StateHandler.find_all_enemy_moves(board, player)
+                    if not StateHandler.is_check(player_king, enemy_moves):
+                        return True
+                    else:
+                        board.squares[saved_row][saved_col].set_piece(piece)
+                        board.squares[target_row][target_col].set_piece(None)
+                        return False
         return False
 
     @staticmethod
