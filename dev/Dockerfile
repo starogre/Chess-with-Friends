@@ -21,6 +21,7 @@ RUN apt-get update && \
     python3 \
     python3-pip \
     zsh \
+    tree \
     openjdk-19-jdk
 
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \

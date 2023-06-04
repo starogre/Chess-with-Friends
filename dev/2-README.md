@@ -75,7 +75,7 @@ docker system prune -a - This will remove:
   - all images without at least one container associated to them
   - all build cache
 
-Deleting and removing docker containers/images is ok, containers are ephemeral
+Deleting/Removing/Exiting Docker Containers/Images is ok, Containers are ephemeral, the Dockerfile contains the build instructions that the 01-build.sh script is looking for
 
 Deleting the docker volumes of my_project_files and my_ssh_keys will cause loss of work within your locally cloned Chess repo and loss of SSH key respectively
 
