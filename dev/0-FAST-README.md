@@ -27,7 +27,7 @@ Once inside container:
 You're good to go now
 
 `exit` while inside contianer will take you out of container
-`./02-enter.sh` while on WSL Ubuntu takes you back into container (assuming you did not delete/remove container, in which case re-run `./01-build.sh` then `./02-enter.sh`
+`./02-enter.sh` while on WSL Ubuntu takes you back into container (assuming you did not delete/remove container image, in which case re-run `./01-build.sh` then `./02-enter.sh`
 
 `./00-docker-install-ubuntu.sh` only needs to be run once on Host Machine WSL
 `./01-build.sh` only needs to be run if you remove the docker image (does not need to be re-ran if `exit` from inside container)
