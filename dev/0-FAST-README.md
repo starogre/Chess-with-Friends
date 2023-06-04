@@ -29,6 +29,10 @@ You're good to go now
 `exit` while inside contianer will take you out of container
 `./02-enter.sh` while on WSL Ubuntu takes you back into container (assuming you did not delete/remove container, in which case re-run `./01-build.sh` then `./02-enter.sh`
 
+`./00-docker-install-ubuntu.sh` only needs to be run once on Host Machine WSL
+`./01-build.sh` only needs to be run if you remove the docker image (does not need to be re-ran if `exit` from inside container)
+`./02-enter.sh` will be your go to for rejoining the container
+
 nvim <-- each enter of docker container will cause nvim to repull/create configs
 
 The other README.md's have more specific info of how to perform each step and a bit more about what is happening

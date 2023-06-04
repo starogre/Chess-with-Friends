@@ -66,19 +66,22 @@ Clone your Git repositories inside the /app directory in the Docker container
 
 Extra commands for deleting containers/removing images:
 
-`docker rm -vf $(docker ps -aq)` - removes all running containers (be careful with this one)
+`docker rm -vf $(docker ps -aq)` - removes all running containers
 `docker rm --help` for more details
-`docker rmi -f $(docker images -aq)` - removes/untags all docker images
+`docker rmi -f $(docker images -aq)` - removes/untags all docker images (`./01-build.sh` will need to be re-ran to re-create the docker image)
 `docker rmi --help`
 `docker system prune -a` - This will remove:
   - all stopped containers
   - all networks not used by at least one container
   - all images without at least one container associated to them
   - all build cache
+(`./01-build.sh` to re-create the container)
 
 Deleting/Removing/Exiting Docker Containers/Images is ok, Containers are ephemeral, the Dockerfile contains the build instructions that the `01-build.sh` script is looking for
 
 Deleting the docker volumes of `my_project_files` and `my_ssh_keys` will cause loss of work within your locally cloned Chess repo and loss of SSH key respectively
+
+(Would recommend not deleting docker volumes to avoid loss of work)
 
 ## Important points:
 
