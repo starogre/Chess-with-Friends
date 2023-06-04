@@ -36,6 +36,9 @@ This script starts a Docker container and opens a Zsh shell inside it. The conta
 
 Docker volumes are used to persist data. The my_ssh_keys volume is used to store SSH keys, which allows you to access Git repositories securely from within the Docker container. The my_project_files volume is where you can clone your Git repositories, such as the Chess-with-Friends repo. Any changes to the data in these volumes will persist across different runs of the Docker container. Cloning Chess repo into /app directory will persist the repo between entering/exiting/destroying container.
 
+exit - lets you exit container once you are inside
+re-rerunning ./02-enter.sh will re-initialized container
+
 ## Step 4: Clone Git Repo
 
 Clone your Git repositories inside the /app directory in the Docker container

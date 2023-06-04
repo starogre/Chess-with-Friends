@@ -21,6 +21,7 @@ RUN apt-get update && \
     python3 \
     python3-pip \
     zsh \
+    xclip \
     openjdk-19-jdk
 
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
@@ -42,6 +43,7 @@ set softtabstop=4\n\
 set tabstop=4\n\
 set shiftwidth=4\n\
 set expandtab\n\
+vnoremap \y :w !xclip -selection clipboard<CR><CR>\n\
 syntax enable" > ~/.vimrc
 
 WORKDIR /neovim
