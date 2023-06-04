@@ -1,4 +1,5 @@
 #!/bin/bash
+#This script is to be ran on WSL Ubuntu / Ubuntu/PopOS/apt based distros
 
 sudo apt-get update -qq
 
