@@ -1,6 +1,6 @@
 # DevBox Docker Environment
 
-This project sets up a development environment using Docker, including tools like Node.js, Zsh, oh-my-zsh, Neovim, and more. 
+This will set up a development environment using Docker 
 
 This guide assumes that you're using WSL Ubuntu(will work on Ubuntu/PopOS Linux as well)
 
@@ -9,6 +9,7 @@ This guide assumes that you're using WSL Ubuntu(will work on Ubuntu/PopOS Linux 
 Run the `00-docker-install-ubuntu.sh` script to install Docker on your WSL Ubuntu environment. 
 
 ./00-docker-install-ubuntu.sh
+(this script only needs to be run once after WSL Ubuntu is installed)
 
 Run the following to add yourself to docker group so you can run docker commands
 
