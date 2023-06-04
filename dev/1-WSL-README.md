@@ -5,19 +5,19 @@ These are 3 good references for WSL but the steps I wrote below I believe will w
 
 https://learn.microsoft.com/en-us/windows/wsl/install#prerequisites
 https://learn.microsoft.com/en-us/windows/wsl/install
-https://www.youtube.com/watch?v=clZCrVZH4Gg&ab_channel=Dave%27sGarage  <-- this guy is an excellent programmer to that is fun to watch
+https://www.youtube.com/watch?v=clZCrVZH4Gg&ab_channel=Dave%27sGarage
 
 ## Enable Virtualization
 
-Head to 'Windows Features' --> enable 'Virtual Machine Platform' (this should be all you need to enable here but if not you can enable 'Hyper-V and 'Windows Hypervisor Platform'
+Head to `Windows Features` --> enable `Virtual Machine Platform` (this should be all you need to enable here but if not you can enable `Hyper-V` and `Windows Hypervisor Platform`
 
-You can also enable 'Windows Subsystem for Linux' here but I usually just install it from Microsoft Store.
+You can also enable `Windows Subsystem for Linux` here but I usually just install it from Microsoft Store.
 
-In general most modern systems will support hardware virtualization (VT-x for Intel, AMD-V for AMD) so you shouldn't have to check your BIOS for enabled Virtualization. This could be kind of a last resort check after Virtualization has been enabled within Windows Features. This paragraph can be ignored most likely, just thought I'd mention in case WSL complains even after Windows Features have been turned on.
+NIT: In general most modern systems will support hardware virtualization (VT-x for Intel, AMD-V for AMD) so you shouldn't have to check your BIOS for enabled Virtualization. This could be kind of a last resort check after Virtualization has been enabled within Windows Features. This paragraph can be ignored most likely, just thought I'd mention in case WSL complains even after Windows Features have been turned on.
 
 ## Microsoft store
 
-If you did not enable 'Windows Subsystem for Linux' in Windows 'Features':
+If you did not enable `Windows Subsystem for Linux` in `Windows Features`:
 
 Head to Microsoft Store search `WSL` --> install WSL and then install `Ubuntu`
 
@@ -25,12 +25,12 @@ While you are in Microsoft Store also install `Windows Terminal` <-- great termi
 
 ## Open Windows Terminal
 
-The drop down bar should now have Ubuntu listed, click on this
+The drop down bar should now have `Ubuntu` listed, click on this
 This should start installing Ubuntu WSL
 
-Change default terminal from powershell to Ubuntu by clicking arrow drop down on terminal --> 'Settings' --> 'Startup / Default Profile'
+Change default terminal from powershell to Ubuntu by clicking `Arrow Drop Down On Terminal` --> `Settings` --> `Startup / Default Profile`
 
-sudo apt update && sudo apt upgrade <-- good commands to run in Linux to keep you updated
+`sudo apt update && sudo apt upgrade` <-- good commands to run in Linux to keep you updated
 
 ## Ready to run 00-docker-install-ubuntu.sh
 

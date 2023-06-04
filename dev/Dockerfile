@@ -22,7 +22,7 @@ RUN apt-get update && \
     python3-pip \
     zsh \
     tree \
-    openjdk-19-jdk
+    openjdk-17-jdk
 
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs
