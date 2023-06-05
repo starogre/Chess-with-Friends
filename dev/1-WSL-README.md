@@ -23,6 +23,8 @@ Head to Microsoft Store search `WSL` --> install WSL and then install `Ubuntu`
 
 While you are in Microsoft Store also install `Windows Terminal` <-- great terminal for windows
 
+Reboot after WSL installed
+
 ## Open Windows Terminal
 
 The drop down bar should now have `Ubuntu` listed, click on this

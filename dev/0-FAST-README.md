@@ -11,6 +11,8 @@ Summary from `1-WSL-README.md`:
 Open `Windows Terminal` --> click `Drop Down Bar` --> `Ubuntu`
 If it errors theres some troubleshooting steps in `1-WSL-README.md`
 
+Reboot after WSL installed
+
 Run the following scripts in order 
 
 On Host Machine WSL:
