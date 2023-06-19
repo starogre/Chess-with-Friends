@@ -1,40 +1,52 @@
-# Quick README for the important stuff
+# Quick Guide: Setting Up and Using WSL with Docker
 
-## Fast Overview of Steps Needed
+This guide provides a high-level overview of the steps required to install and use Windows Subsystem for Linux (WSL) with Docker on your machine.
 
-Install WSL on Host Machine (these steps also work on apt based distros)
+## Prerequisites
 
-Follow steps within 1-WSL-README.md
-Summary from `1-WSL-README.md`:
-`Windows Features` --> enable `Virtual Machine Platform`
-`Microsoft Store` --> `WSL` install --> `Ubuntu` install --> `Windows Terminal` install
-Open `Windows Terminal` --> click `Drop Down Bar` --> `Ubuntu`
-If it errors theres some troubleshooting steps in `1-WSL-README.md`
+- Windows system with Virtual Machine Platform enabled
+- WSL installed from the Microsoft Store
+- Ubuntu installed within WSL
+- Windows Terminal installed for accessing WSL
 
-Reboot after WSL installed
+For more detailed steps on setting up the prerequisites, refer to `1-WSL-README.md`.
 
-Run the following scripts in order 
+## Initial Setup
 
-On Host Machine WSL:
-`./00-docker-install-ubuntu.sh`
-`./01-build.sh`
-`./02-enter.sh`
+1. Reboot your system after installing WSL.
 
-Once inside container:
-`ssh-keygen -t ed25519 -C "your_email@example.com"`
-`cat /root/.ssh/id_ed25519.pub`
-`cd /app` (important directory that will persist your information across entering/exiting containers)
-`git clone git@github.com:JackFUrton/Chess-with-Friends.git`
+2. Run the setup scripts in the following order:
 
-You're good to go now
+   - On your WSL terminal, navigate to the directory where the scripts are located.
+   - Run `./00-docker-install-ubuntu.sh`.
+   - Run `./01-build.sh`.
+   - Run `./02-enter.sh`.
 
-`exit` while inside contianer will take you out of container
-`./02-enter.sh` while on WSL Ubuntu takes you back into container (assuming you did not delete/remove container image, in which case re-run `./01-build.sh` then `./02-enter.sh`
+## Working within the Docker Container
 
-`./00-docker-install-ubuntu.sh` only needs to be run once on Host Machine WSL
-`./01-build.sh` only needs to be run if you remove the docker image (does not need to be re-ran if `exit` from inside container)
-`./02-enter.sh` will be your go to for rejoining the container
+1. Once inside the Docker container:
 
-nvim <-- each enter of docker container will cause nvim to repull/create configs
+   - Generate an SSH key with `ssh-keygen -t ed25519 -C "your_email@example.com"`.
+   - Display your new public key with `cat /root/.ssh/id_ed25519.pub`.
+   
+2. Navigate to the `/app` directory (this directory will persist your information across entering/exiting containers).
 
-The other README.md's have more specific info of how to perform each step and a bit more about what is happening
+3. Clone the Chess-with-Friends repository: `git clone git@github.com:JackFUrton/Chess-with-Friends.git`.
+
+You are now ready to work within your Docker container.
+
+## Important Notes
+
+- To exit the Docker container, simply type `exit`.
+
+- To re-enter the Docker container:
+
+   - If you've exited but not removed the Docker container, run `./02-enter.sh` in your WSL terminal.
+   
+   - If you've removed the Docker container, you'll need to run `./01-build.sh` and then `./02-enter.sh` again.
+   
+- The `./00-docker-install-ubuntu.sh` script only needs to be run once on your WSL terminal.
+- The `./01-build.sh` script only needs to be run if you've removed the Docker container.
+
+Remember that each time you enter the Docker container, it will refresh/create the Neovim configurations. For detailed instructions on each step and additional information about the processes, refer to the other README.md files.
+

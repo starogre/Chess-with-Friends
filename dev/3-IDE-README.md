@@ -1,34 +1,27 @@
 # IDE README
 
-## nvim
+## Neovim (nvim)
 
-The first time you type nvim, it will start installing/configuring all of the plugins, once complete, you can :q
-The next time you open nvim you will have access to some cool features
+This configuration provides an enhanced experience for Neovim with several handy features.
 
-<space> s f - search for files (fuzzy find)
+### Initial Setup
 
-<space> / (inside a file) - nice version of just regular /
+When you run `nvim` for the first time, it will start installing and configuring all of the plugins. This process is automatic, and you can exit once it's complete using `:q`. The next time you open Neovim, all the features will be available.
 
-`:Telescope` - a nice feature for viewing commits, stash, buffers, git status, and much more
+### Key Features
 
-`:LspInfo` - view currently configured servers list
+- `<space> s f`: Search for files (fuzzy find).
+- `<space> /`: Enhanced search within a file.
+- `:Telescope`: A powerful tool for viewing commits, stash, buffers, git status, and more.
+- `:LspInfo`: View the currently configured servers list.
+- `:Mason`: Add or update language servers.
+- `:0G`: Fullscreen Vim Fugitive, an easy-to-use tool for staging and unstaging files. Use `-` to stage/unstage files. Vim hotkeys work here as well, allowing you to stage or unstage multiple files in visual mode.
+- `:Git commit -m "commit message"`: Commit changes with a message.
+- `:Git push`: Push changes to the repository.
+- `g d`: Jump to definition inside a file (uses LSP).
+- `g r`: Pull up references inside a file.
 
-`:Mason` - add / update language servers
+### Note on Persistence
 
-`:0G` - vim fugitive (alternatively you can :G but :0G gives you fullscreen fugitive). Fugitive allows for really easy staging/unstaging files. Use `-` when hovered over a file to stage, and `-` when it is staged to remove it from the staging area. Vim hotkeys work in fugitive as well, so entering visual mode, then `-` will stage or unstage multiple files.
+Every time you exit and re-enter the container, Neovim will need to repull and rebuild plugins and configurations. Persisting these files across sessions would consume a significant amount of space, which is prioritized for more critical features such as SSH and Git repositories. If waiting for Neovim to repull configurations becomes a nuisance, adjustments can be made.
 
-`:Git commit -m "commit message"` - another nice fugitive feature
-
-`:Git push`
-
-`g d` - inside a file to jump to definition (uses Lsp)
-
-`g r` - pulls up references inside a file
-
-These are just a few of the nice features this nvim config offers
-
-A note on nvim between exiting/entering the container:
-
-Unfortunately everytime you exit/enter container, nvim will need to repull/build plugins/configurations, persisting this across exits/enters/rebuilds would be a lot of files, so to save space for the more important ssh/git repos I left this out
-
-It's not a huge deal I think but if its annoying having to wait for nvim to repull configs after you have left and then re-entered the container I can change it

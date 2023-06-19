@@ -1,89 +1,78 @@
 # DevBox Docker Environment
 
-This will set up a development environment using Docker 
+Set up a Docker-based development environment on WSL Ubuntu. This guide should also work on Ubuntu/PopOS Linux.
 
-This guide assumes that you're using WSL Ubuntu(will work on Ubuntu/PopOS Linux as well)
+## Prerequisites
+- WSL Ubuntu or similar Linux system
+- You have sudo access on your system
 
-## Step 1: Docker Installation
+## Installation Steps
 
-Run the `00-docker-install-ubuntu.sh` script to install Docker on your WSL Ubuntu environment. 
+1. **Docker Installation**
 
-`./00-docker-install-ubuntu.sh`
+    Install Docker on your WSL Ubuntu environment using the provided script. You only need to do this once after installing WSL Ubuntu.
 
-(this script only needs to be run once after WSL Ubuntu is installed)
+    ```bash
+    ./00-docker-install-ubuntu.sh
+    ```
 
-Run the following to add yourself to docker group so you can run docker commands
+2. **Add User to Docker Group**
 
-`whoami` (make note of username)
-`sudo -i` (switch to root user)
-`usermod -aG docker <username>`
-`su <username>`
+    Add yourself to the Docker group to enable running Docker commands. Replace `<username>` with your actual username.
 
-## Step 2: Build Docker Image
+    ```bash
+    sudo usermod -aG docker <username>
+    ```
 
-Once Docker is installed, you can build the Docker image using the `01-build.sh` script.
+3. **Build Docker Image**
 
-`./01-build.sh`
+    Use the provided script to build the Docker image. This image is named `devbox` and includes all necessary tools and configurations.
 
-This script builds a Docker image named devbox from the Dockerfile in the current directory. The image includes all the necessary tools and configurations defined in the Dockerfile.
+    ```bash
+    ./01-build.sh
+    ```
 
-## Step 3: Enter the Docker Container
+4. **Enter the Docker Container**
 
-Once the image is built, you can start a Docker container from the devbox image using the `02-enter.sh` script.
+    Start a Docker container from the `devbox` image using the script. This will open a zsh shell inside the container. Note that any changes made inside the `/app` directory will persist across container runs.
 
-`./02-enter.sh`
+    ```bash
+    ./02-enter.sh
+    ```
 
-This script starts a Docker container and opens a zshell (zsh) inside it. The container has two volumes mounted: `my_ssh_keys` at `/root/.ssh` and `my_project_files` at `/app`.
+5. **SSH for Github**
 
-`Docker volumes` are used to persist data. The `my_ssh_keys` volume is used to store SSH keys, which allows you to access Git repositories securely from within the Docker container. The `my_project_files` volume is where you can clone your Git repositories, i.e `Chess-with-Friends` repo. Any changes to the data in these volumes will persist across different runs of the Docker container. Cloning Chess repo into `/app` directory will persist the repo between entering/exiting/destroying container.
+    Generate an SSH key for secure communication with GitHub.This is to be done inside the Docker container. Replace `"your_email@example.com"` with your GitHub email.
 
-`exit` - lets you exit container once you are inside
-re-rerunning `./02-enter.sh` will re-initialize/enter container
+    ```bash
+    ssh-keygen -t ed25519 -C "your_email@example.com"
+    cat /root/.ssh/id_ed25519.pub
+    ```
 
-## Step 4: SSH for Github
+    After generating your key, add it to your GitHub account.
 
-`ssh-keygen -t ed25519 -C "your_email@example.com"`
+6. **Clone Git Repository**
 
-Follow the prompts to save the key in the default location `(/root/.ssh/id_ed25519)` and optionally set a passphrase.
+    Clone your Git repositories inside the `/app` directory in the Docker container. This will persist even if the container is deleted or exited.
 
-Once you have generated the SSH key, you need to add it to your GitHub account. Run this command to display your public SSH key:
+    ```bash
+    cd /app
+    git clone git@github.com:JackFUrton/Chess-with-Friends.git
+    ```
 
-`cat /root/.ssh/id_ed25519.pub`
+## Additional Docker Commands
 
-## Step 5: Clone Git Repo
+Here are some useful Docker commands:
 
-Clone your Git repositories inside the /app directory in the Docker container
-`cd /app`
-`git clone git@github.com:JackFUrton/Chess-with-Friends.git`
+```bash
+docker --help
+docker ps # view running containers
+docker ps -a # view all containers
+docker volume ls # view docker volumes
+docker images # view built or pulled images
+docker rm -vf $(docker ps -aq) # remove all running containers
+docker rmi -f $(docker images -aq) # remove all images
+docker system prune -a # remove stopped containers, unused networks, all images without a container, and all build cache
 
-## Extra Notes:
+Docker containers are ephemeral. The Dockerfile provides build instructions, so you can recreate your container using the 01-build.sh script. However, deleting the Docker volumes for my_project_files and my_ssh_keys will cause loss of work within your locally cloned Chess repo and your SSH key, respectively. Avoid deleting Docker volumes to prevent loss of work.
 
-`docker --help`
-`docker ps` - view running containers
-`docker ps -a` - view all containers (including exited ones)
-`docker volume ls` - view docker volumes
-`docker images` - view docker images that have been built or pulled
-
-Extra commands for deleting containers/removing images:
-
-`docker rm -vf $(docker ps -aq)` - removes all running containers
-`docker rm --help` for more details
-`docker rmi -f $(docker images -aq)` - removes/untags all docker images (`./01-build.sh` will need to be re-ran to re-create the docker image)
-`docker rmi --help`
-`docker system prune -a` - This will remove:
-  - all stopped containers
-  - all networks not used by at least one container
-  - all images without at least one container associated to them
-  - all build cache
-(`./01-build.sh` to re-create the container)
-
-Deleting/Removing/Exiting Docker Containers/Images is ok, Containers are ephemeral, the Dockerfile contains the build instructions that the `01-build.sh` script is looking for
-
-Deleting the docker volumes of `my_project_files` and `my_ssh_keys` will cause loss of work within your locally cloned Chess repo and loss of SSH key respectively
-
-(Would recommend not deleting docker volumes to avoid loss of work)
-
-## Important points:
-
-`/app` directory inside container is where to clone repos/files you want to persist across exits/deletion of this docker container
-The 2 docker volumes (primarily `my_project_files` that is attached to `/app` directory inside container) will hold your data across deletion and exits of the container
