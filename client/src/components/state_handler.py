@@ -86,11 +86,14 @@ class StateHandler:
     @staticmethod
     def find_all_enemy_moves(board, player):
         all_moves = []
-        for square in board.squares:
-            piece = square.get_piece()
-            if piece.color != player.color:
-                all_moves.append(piece.find_moves(board))
-        return all_moves
+        flattened_list = []
+        for row in board.squares:
+            for squares in row:
+                piece = squares.get_piece()
+                if piece is not None and piece.color != player.color:
+                    all_moves.append(piece.find_moves(board))
+                    flattened_list = [inner for outer in all_moves for inner in outer]
+        return flattened_list
 
     @staticmethod
     def move_is_valid(board, piece, target_row, target_col, player, player_king):
@@ -119,7 +122,9 @@ class StateHandler:
     def is_check(king, enemy_moves):
         if isinstance(king, King):
             for move in enemy_moves:
-                return True if king.get_position() == move else False
+                if king.get_position() == tuple(move):
+                    return True
+            return False
 
     @staticmethod
     def is_checkmate(cls, board, king, enemy_moves):

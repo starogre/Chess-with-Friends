@@ -85,7 +85,27 @@ def test_find_all_player_moves():
 
 
 def test_find_all_enemy_moves():
-    pass
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+    
+    piece1 = Rook("BLACK", (0, 0))
+    piece2 = Rook("BLACK", (7, 7))
+    piece3 = Rook("WHITE", (4, 4))
+    board.squares[0][0].set_piece(piece1)
+    board.squares[7][7].set_piece(piece2)
+    board.squares[4][4].set_piece(piece3)
+
+    player = Player("WHITE")
+    
+    expected_all_moves = [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0],
+                          [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7],
+                          [6, 7], [5, 7], [4, 7], [3, 7], [2, 7], [1, 7], [0, 7],
+                          [7, 6], [7, 5], [7, 4], [7, 3], [7, 2], [7, 1], [7, 0]]
+    
+    assert StateHandler.find_all_enemy_moves(board, player) == expected_all_moves
 
 
 def test_move_is_valid():
@@ -106,7 +126,33 @@ def test_set_last_move():
 
 def test_check():
     board = Board()
-    king = King("WHITE", (0, 0))
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+    
+    # King in check
+            
+    king_piece = King("WHITE", (3, 0))
+    board.squares[3][0].set_piece(king_piece)
+
+    enemy_moves = [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0],
+                   [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7],
+                   [6, 7], [5, 7], [4, 7], [3, 7], [2, 7], [1, 7], [0, 7],
+                   [7, 6], [7, 5], [7, 4], [7, 3], [7, 2], [7, 1], [7, 0]]
+
+    assert StateHandler.is_check(king_piece, enemy_moves) == True
+
+    # King not in check
+    king_piece = King("WHITE", (4, 4))
+    board.squares[4][4].set_piece(king_piece)
+
+    enemy_moves = [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0],
+                   [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7],
+                   [6, 7], [5, 7], [4, 7], [3, 7], [2, 7], [1, 7], [0, 7],
+                   [7, 6], [7, 5], [7, 4], [7, 3], [7, 2], [7, 1], [7, 0]]
+
+    assert StateHandler.is_check(king_piece, enemy_moves) == False
 
 
 def test_checkmate():
