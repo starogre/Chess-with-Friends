@@ -253,10 +253,13 @@ def test_knight_find_moves_with_enemy_pieces():
 
     # setup enemy pieces on the knights landing squares
     board.squares[2][3].set_piece(Knight("Black", (2, 3)))
-    board.squares[6][5].set_piece(Knight("Black", (2, 5)))
-    board.squares[6][5].set_piece(Knight("Black", (3, 2)))
-    board.squares[6][5].set_piece(Knight("Black", (3, 6)))
-    board.squares[6][5].set_piece(Knight("Black", (5, 2)))
+    board.squares[2][5].set_piece(Knight("Black", (2, 5)))
+    board.squares[3][2].set_piece(Knight("Black", (3, 2)))
+    board.squares[3][6].set_piece(Knight("Black", (3, 6)))
+    board.squares[5][2].set_piece(Knight("Black", (5, 2)))
+    board.squares[5][6].set_piece(Knight("Black", (5, 6)))
+    board.squares[6][3].set_piece(Knight("Black", (6, 3)))
+    board.squares[6][5].set_piece(Knight("Black", (6, 5)))
 
     knight = Knight("White", (4, 4))
     expected_moves = [[2, 3], [2, 5], [3, 2], [3, 6], [5, 2], [5, 6], [6, 3], [6, 5]]
@@ -289,3 +292,386 @@ def test_knight_find_moves_from_corners_and_edges():
     knight = Knight("White", (4, 0))
     expected_moves = [[2, 1], [3, 2], [5, 2], [6, 1]]
     assert knight.find_moves(board) == expected_moves
+
+
+def test_bishop_init():
+    piece = Bishop("White", (1, 1))
+    assert piece.color == "White"
+    assert piece.position == (1, 1)
+    assert piece.has_moved == False
+
+    piece.move_piece((2, 2))
+    assert piece.position == (2, 2)
+    assert piece.has_moved == True
+
+
+def test_bishop_find_moves_empty_board():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    bishop = Bishop("White", (4, 4))
+    expected_moves = [[5, 5], [6, 6], [7, 7], [3, 5], [2, 6], [1, 7], [5, 3],
+                      [6, 2], [7, 1], [3, 3], [2, 2], [1, 1], [0, 0]]
+    assert bishop.find_moves(board) == expected_moves
+
+
+def test_bishop_find_moves_full_board_allied_pieces():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            # all squares occupied by an allied rook
+            square.set_piece(Bishop("White", (square.row, square.col)))
+
+    expected_moves = []
+    bishop = Bishop("White", (4, 4))
+    assert bishop.find_moves(board) == expected_moves
+    bishop = Bishop("White", (0, 0))
+    assert bishop.find_moves(board) == expected_moves
+    bishop = Bishop("White", (8, 8))
+    assert bishop.find_moves(board) == expected_moves
+
+
+def test_bishop_find_moves_with_enemy_pieces():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    # setup enemy pieces on the knights landing squares
+    board.squares[2][2].set_piece(Bishop("Black", (2, 2)))
+    board.squares[6][6].set_piece(Bishop("Black", (6, 6)))
+    board.squares[2][6].set_piece(Bishop("Black", (2, 6)))
+    board.squares[6][2].set_piece(Bishop("Black", (6, 2)))
+
+    bishop = Bishop("White", (4, 4))
+    expected_moves = [[5, 5], [6, 6], [3, 5], [2, 6], [5, 3], [6, 2], [3, 3], [2, 2]]
+    assert bishop.find_moves(board) == expected_moves
+
+
+def test_bishop_find_moves_from_corners_and_edges():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    bishop = Bishop("White", (0, 0))
+    expected_moves = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7]]
+
+    assert bishop.find_moves(board) == expected_moves
+
+    bishop = Bishop("White", [0, 7])
+    expected_moves = [[1, 6], [2, 5], [3, 4], [4, 3], [5, 2], [6, 1], [7, 0]]
+
+    assert bishop.find_moves(board) == expected_moves
+
+    bishop = Bishop("White", [7, 0])
+    expected_moves = [[6, 1], [5, 2], [4, 3], [3, 4], [2, 5], [1, 6], [0, 7]]
+
+    assert bishop.find_moves(board) == expected_moves
+
+    bishop = Bishop("White", [7, 7])
+    expected_moves = [[6, 6], [5, 5], [4, 4], [3, 3], [2, 2], [1, 1], [0, 0]]
+
+    assert bishop.find_moves(board) == expected_moves
+
+    bishop = Bishop("White", (4, 0))
+    expected_moves = [[5, 1], [6, 2], [7, 3], [3, 1], [2, 2], [1, 3], [0, 4]]
+
+    assert bishop.find_moves(board) == expected_moves
+
+
+def test_rook_init():
+    piece = Rook("White", (1, 1))
+    assert piece.color == "White"
+    assert piece.position == (1, 1)
+    assert piece.has_moved == False
+
+    piece.move_piece((2, 2))
+    assert piece.position == (2, 2)
+    assert piece.has_moved == True
+
+
+def test_rook_find_moves_empty_board():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    rook = Rook("White", (4, 4))
+    expected_moves = [[5, 4], [6, 4], [7, 4], [3, 4], [2, 4], [1, 4], [0, 4],
+                      [4, 5], [4, 6], [4, 7], [4, 3], [4, 2], [4, 1], [4, 0]]
+    assert rook.find_moves(board) == expected_moves
+
+
+def test_rook_find_moves_full_board_allied_pieces():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            # all squares occupied by an allied rook
+            square.set_piece(Rook("White", (square.row, square.col)))
+
+    expected_moves = []
+    rook = Rook("White", (4, 4))
+    assert rook.find_moves(board) == expected_moves
+    rook = Rook("White", (0, 0))
+    assert rook.find_moves(board) == expected_moves
+    rook = Rook("White", (8, 8))
+    assert rook.find_moves(board) == expected_moves
+
+
+def test_rook_find_moves_with_enemy_pieces():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    # setup enemy pieces on the knights landing squares
+    board.squares[2][4].set_piece(Rook("Black", (2, 4)))
+    board.squares[6][4].set_piece(Rook("Black", (6, 4)))
+    board.squares[4][2].set_piece(Rook("Black", (4, 2)))
+    board.squares[4][6].set_piece(Rook("Black", (4, 6)))
+
+    rook = Rook("White", (4, 4))
+    expected_moves = [[5, 4], [6, 4], [3, 4], [2, 4], [4, 5], [4, 6], [4, 3], [4, 2]]
+    assert rook.find_moves(board) == expected_moves
+
+
+def test_rook_find_moves_from_corners_and_edges():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    rook = Rook("White", (0, 0))
+    expected_moves = [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0],
+                      [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7]]
+    assert rook.find_moves(board) == expected_moves
+
+    rook = Rook("White", [0, 7])
+    expected_moves = [[1, 7], [2, 7], [3, 7], [4, 7], [5, 7], [6, 7], [7, 7],
+                      [0, 6], [0, 5], [0, 4], [0, 3], [0, 2], [0, 1], [0, 0]]
+    assert rook.find_moves(board) == expected_moves
+
+    rook = Rook("White", [7, 0])
+    expected_moves = [[6, 0], [5, 0], [4, 0], [3, 0], [2, 0], [1, 0], [0, 0],
+                      [7, 1], [7, 2], [7, 3], [7, 4], [7, 5], [7, 6], [7, 7]]
+    assert rook.find_moves(board) == expected_moves
+
+    rook = Rook("White", [7, 7])
+    expected_moves = [[6, 7], [5, 7], [4, 7], [3, 7], [2, 7], [1, 7], [0, 7],
+                      [7, 6], [7, 5], [7, 4], [7, 3], [7, 2], [7, 1], [7, 0]]
+    assert rook.find_moves(board) == expected_moves
+
+    rook = Rook("White", (4, 0))
+    expected_moves = [[5, 0], [6, 0], [7, 0], [3, 0], [2, 0], [1, 0], [0, 0],
+                      [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6], [4, 7]]
+    assert rook.find_moves(board) == expected_moves
+
+
+def test_queen_init():
+    piece = Queen("White", (1, 1))
+    assert piece.color == "White"
+    assert piece.position == (1, 1)
+    assert piece.has_moved == False
+
+    piece.move_piece((2, 2))
+    assert piece.position == (2, 2)
+    assert piece.has_moved == True
+
+
+def test_queen_find_moves_empty_board():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    queen = Queen("White", (4, 4))
+    expected_moves = [[5, 5], [6, 6], [7, 7], [3, 5], [2, 6], [1, 7], [5, 3],
+                      [6, 2], [7, 1], [3, 3], [2, 2], [1, 1], [0, 0], [5, 4],
+                      [6, 4], [7, 4], [3, 4], [2, 4], [1, 4], [0, 4],
+                      [4, 5], [4, 6], [4, 7], [4, 3], [4, 2], [4, 1], [4, 0]]
+    assert queen.find_moves(board) == expected_moves
+
+
+def test_queen_find_moves_full_board_allied_pieces():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            # all squares occupied by an allied rook
+            square.set_piece(Queen("White", (square.row, square.col)))
+
+    expected_moves = []
+    queen = Queen("White", (4, 4))
+    assert queen.find_moves(board) == expected_moves
+    queen = Queen("White", (0, 0))
+    assert queen.find_moves(board) == expected_moves
+    queen = Queen("White", (8, 8))
+    assert queen.find_moves(board) == expected_moves
+
+
+def test_queen_find_moves_with_enemy_pieces():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    # setup enemy pieces on the knights landing squares
+    board.squares[2][2].set_piece(Queen("Black", (2, 2)))
+    board.squares[6][6].set_piece(Queen("Black", (6, 6)))
+    board.squares[2][6].set_piece(Queen("Black", (2, 6)))
+    board.squares[6][2].set_piece(Queen("Black", (6, 2)))
+    board.squares[2][4].set_piece(Queen("Black", (2, 4)))
+    board.squares[6][4].set_piece(Queen("Black", (6, 4)))
+    board.squares[4][2].set_piece(Queen("Black", (4, 2)))
+    board.squares[4][6].set_piece(Queen("Black", (4, 6)))
+
+    queen = Queen("White", (4, 4))
+    expected_moves = [[5, 5], [6, 6], [3, 5], [2, 6], [5, 3], [6, 2], [3, 3], [2, 2],
+                      [5, 4], [6, 4], [3, 4], [2, 4], [4, 5], [4, 6], [4, 3], [4, 2]]
+    assert queen.find_moves(board) == expected_moves
+
+
+def test_queen_find_moves_from_corners_and_edges():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    queen = Queen("White", (0, 0))
+    expected_moves = [[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7],
+                      [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0],
+                      [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7]]
+
+    assert queen.find_moves(board) == expected_moves
+
+    queen = Queen("White", [0, 7])
+    expected_moves = [[1, 6], [2, 5], [3, 4], [4, 3], [5, 2], [6, 1], [7, 0],
+                      [1, 7], [2, 7], [3, 7], [4, 7], [5, 7], [6, 7], [7, 7],
+                      [0, 6], [0, 5], [0, 4], [0, 3], [0, 2], [0, 1], [0, 0]]
+
+    assert queen.find_moves(board) == expected_moves
+
+    queen = Queen("White", [7, 0])
+    expected_moves = [[6, 1], [5, 2], [4, 3], [3, 4], [2, 5], [1, 6], [0, 7],
+                      [6, 0], [5, 0], [4, 0], [3, 0], [2, 0], [1, 0], [0, 0],
+                      [7, 1], [7, 2], [7, 3], [7, 4], [7, 5], [7, 6], [7, 7]]
+
+    assert queen.find_moves(board) == expected_moves
+
+    queen = Queen("White", [7, 7])
+    expected_moves = [[6, 6], [5, 5], [4, 4], [3, 3], [2, 2], [1, 1], [0, 0],
+                      [6, 7], [5, 7], [4, 7], [3, 7], [2, 7], [1, 7], [0, 7],
+                      [7, 6], [7, 5], [7, 4], [7, 3], [7, 2], [7, 1], [7, 0]]
+
+    assert queen.find_moves(board) == expected_moves
+
+    queen = Queen("White", (4, 0))
+    expected_moves = [[5, 1], [6, 2], [7, 3], [3, 1], [2, 2], [1, 3], [0, 4],
+                      [5, 0], [6, 0], [7, 0], [3, 0], [2, 0], [1, 0], [0, 0],
+                      [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6], [4, 7]]
+
+    assert queen.find_moves(board) == expected_moves
+
+
+def test_king_init():
+    piece = King("White", (1, 1))
+    assert piece.color == "White"
+    assert piece.position == (1, 1)
+    assert piece.has_moved == False
+
+    piece.move_piece((2, 2))
+    assert piece.position == (2, 2)
+    assert piece.has_moved == True
+
+
+def test_king_find_moves_empty_board():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    king = King("White", (4, 4))
+    expected_moves = [[3, 3], [3, 5], [5, 3], [5, 5], [5, 4], [3, 4], [4, 5], [4, 3]]
+    assert king.find_moves(board) == expected_moves
+
+
+def test_king_find_moves_full_board_allied_pieces():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            # all squares occupied by an allied king
+            square.set_piece(King("White", (square.row, square.col)))
+
+    expected_moves = []
+    king = King("White", (4, 4))
+    assert king.find_moves(board) == expected_moves
+    king = King("White", (0, 0))
+    assert king.find_moves(board) == expected_moves
+    king = King("White", (8, 8))
+    assert king.find_moves(board) == expected_moves
+
+
+def test_king_find_moves_with_enemy_pieces():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    # setup enemy pieces on the knights landing squares
+    board.squares[3][3].set_piece(King("Black", (3, 3)))
+    board.squares[3][5].set_piece(King("Black", (3, 5)))
+    board.squares[5][3].set_piece(King("Black", (5, 3)))
+    board.squares[5][5].set_piece(King("Black", (5, 5)))
+    board.squares[5][4].set_piece(King("Black", (5, 4)))
+    board.squares[3][4].set_piece(King("Black", (3, 4)))
+    board.squares[4][5].set_piece(King("Black", (4, 5)))
+    board.squares[4][3].set_piece(King("Black", (4, 3)))
+
+    king = King("White", (4, 4))
+    expected_moves = [[3, 3], [3, 5], [5, 3], [5, 5], [5, 4], [3, 4], [4, 5], [4, 3]]
+    assert king.find_moves(board) == expected_moves
+
+
+def test_king_find_moves_with_corners_and_edges():
+    board = Board()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    king = King("White", (0, 0))
+    expected_moves = [[1, 1], [1, 0], [0, 1]]
+    assert king.find_moves(board) == expected_moves
+
+    king = King("White", [0, 7])
+    expected_moves = [[1, 6], [1, 7], [0, 6]]
+    assert king.find_moves(board) == expected_moves
+
+    king = King("White", [7, 0])
+    expected_moves = [[6, 1], [6, 0], [7, 1]]
+    assert king.find_moves(board) == expected_moves
+
+    king = King("White", [7, 7])
+    expected_moves = [[6, 6], [6, 7], [7, 6]]
+    assert king.find_moves(board) == expected_moves
+
+    king = King("White", (4, 0))
+    expected_moves = [[3, 1], [5, 1], [5, 0], [3, 0], [4, 1]]
+    assert king.find_moves(board) == expected_moves
