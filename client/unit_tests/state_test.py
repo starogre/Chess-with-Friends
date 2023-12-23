@@ -109,6 +109,7 @@ def test_find_all_enemy_moves():
 
 
 def test_move_is_valid():
+    # Set up board
     board = Board()
     state_handler = StateHandler()
 
@@ -116,23 +117,72 @@ def test_move_is_valid():
         for square in row:
             square.set_piece(None)
 
-    king = King("WHITE", (0, 0))
-    queen = Queen("BLACK", (1, 1)) # place queen in position  
-    rook = Rook("BLACK", (2, 1)) # place rook in position"
-
+    king = King("WHITE", [0, 0])
+    queen = Queen("BLACK", [1, 1]) # place queen in position
+    king2 = King("BLACK", [7, 7])  
     board.squares[0][0].set_piece(king)
     board.squares[1][1].set_piece(queen)
-    board.squares[2][1].set_piece(rook)
+    board.squares[7][7].set_piece(king2)
+    
     player = Player("WHITE")
+    player2 = Player("BLACK")
 
     # Valid move for the king to capture the queen
     is_valid_capture = state_handler.move_is_valid(board, king, 1, 1, player, king)
     assert is_valid_capture is True
 
-    # Invalid move for the king to move to a non-capturable position
+
+    # reset board
+    board = Board()
+    state_handler = StateHandler()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    king = King("WHITE", [0, 0])
+    queen = Queen("BLACK", [1, 1]) # place queen in position
+    king2 = King("BLACK", [7, 7])  
+    board.squares[0][0].set_piece(king)
+    board.squares[1][1].set_piece(queen)
+    board.squares[7][7].set_piece(king2)
+    
+    player = Player("WHITE")
+    player2 = Player("BLACK")
+
+    # Valid move for the black queen to move across the board somewhere
+    is_regular_move = state_handler.move_is_valid(board, queen, 1, 5, player2, king2)
+    assert is_regular_move is True
+
+
+    # reset board
+    board = Board()
+    state_handler = StateHandler()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    king = King("WHITE", [0, 0])
+    queen = Queen("BLACK", [1, 1]) # place queen in position
+    king2 = King("BLACK", [7, 7])  
+    board.squares[0][0].set_piece(king)
+    board.squares[1][1].set_piece(queen)
+    board.squares[7][7].set_piece(king2)
+    
+    player = Player("WHITE")
+    player2 = Player("BLACK")
+    # Invalid move for the king to move to a move in check
     is_valid_regular_move = state_handler.move_is_valid(board, king, 0, 1, player, king)
     assert is_valid_regular_move is False
 
+    # # add more pieces
+    # rook = Rook("BLACK", [2, 1]) # place rook in position"
+    # board.squares[2][1].set_piece(rook)
+
+    # # Invalid move for the king to move to a position that puts it in check while capturing a piece
+    # is_valid_capture_into_check = state_handler.move_is_valid(board, king, 1, 1, player, king)
+    # assert is_valid_capture_into_check is False
 
 def test_is_capture():
     state_handler = StateHandler()
@@ -154,12 +204,6 @@ def test_is_capture():
     is_invalid_capture = state_handler.is_capture(white_piece, Pawn("WHITE", (2, 2)))
     assert is_invalid_capture is False
 
-def test_pawn_moved_two():
-    pass
-
-
-def test_set_last_move():
-    pass
 
 
 def test_check():
@@ -171,7 +215,7 @@ def test_check():
     
     # King in check
             
-    king_piece = King("WHITE", (3, 0))
+    king_piece = King("WHITE", [3, 0])
     board.squares[3][0].set_piece(king_piece)
 
     enemy_moves = [[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0],
@@ -228,14 +272,90 @@ def test_checkmate():
     # print(king.find_moves(board))
     # assert is_checkmate is False
 
+def test_move_piece():
+    # create board and specify positions
+    board = Board()
+    piece = King("WHITE", [0, 0])
+    board.squares[0][0].set_piece(piece)
+
+    # define target position to move piece to
+    target_row = 1
+    target_col = 1
+
+    # store initial position of piece
+    initial_position = piece.get_position()
+
+    # move piece to target position using state handler method
+    StateHandler.move_piece(board, piece, initial_position[0], initial_position[1], target_row, target_col)
+
+    # Assert piece has moved to target position
+    assert piece.position == [1, 1]
+    assert board.squares[target_row][target_col].get_piece() is piece
+    assert board.squares[initial_position[0]][initial_position[1]].get_piece() is None
+
+
+def test_update_state():
+    board = Board()
+    state_handler = StateHandler()
+
+    # set up board and pieces
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    king = King("WHITE", [0, 0])
+    queen = Queen("BLACK", [1, 1])
+    board.squares[0][0].set_piece(king)
+    board.squares[1][1].set_piece(queen)
+    player = Player("WHITE")
+
+    # save initial state
+    # list comprehension to slice each row into a list of rows, copies of the board.squares list of lists
+    initial_state = [row[:] for row in board.squares]
+    # execute update_state
+    state_handler.update_state(StateHandler, board, king, 1, 1)
+
+    # assertions
+    assert board.squares[0][0].get_piece() is None # check if king was removed from old square
+    assert board.squares[1][1].get_piece() == king # check if king was moved to new square
+    assert initial_state[0][0].get_piece() is None # check if board state at 0, 0 was updated
+    assert initial_state[1][1].get_piece() == king # check if board state at 1, 1 was updated
+
+
+def test_execute_move():
+    board = Board()
+    state_handler = StateHandler()
+
+    # set up board and pieces
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+    
+    king = King("WHITE", [0, 0])
+    queen = Queen("BLACK", [1, 1])
+    board.squares[0][0].set_piece(king)
+    board.squares[1][1].set_piece(queen)
+    player = Player("WHITE")
+
+    # execute move
+    state_handler.execute_move(StateHandler, board, king, 1, 1, player, king)
+
+    # assertions
+    assert king.position == [1, 1] # check if king is in new position
+    assert board.squares[0][0].get_piece() is None # check if previous position is empty
+
 
 def test_stalemate():
     pass
 
-
-def test_execute_move():
+def test_castle():
     pass
 
+def test_pawn_moved_two():
+    pass
 
-def test_update_state():
+def test_set_last_move():
+    pass
+
+def test_remove_piece():
     pass
