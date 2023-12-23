@@ -1,5 +1,5 @@
-from state_handler import StateHandler
-from board import Board
+from client.src.components.state_handler import StateHandler
+from client.src.components.board import Board
 
 
 class GameController:

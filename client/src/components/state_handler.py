@@ -86,36 +86,74 @@ class StateHandler:
     @staticmethod
     def find_all_enemy_moves(board, player):
         all_moves = []
-        flattened_list = []
         for row in board.squares:
             for squares in row:
                 piece = squares.get_piece()
                 if piece is not None and piece.color != player.color:
-                    all_moves.append(piece.find_moves(board))
-                    flattened_list = [inner for outer in all_moves for inner in outer]
-        return flattened_list
+                    moves = piece.find_moves(board)
+                    all_moves.extend(moves)
+        return all_moves
 
     @staticmethod
     def move_is_valid(board, piece, target_row, target_col, player, player_king):
         possible_moves = piece.find_moves(board)
+        print("Possible Moves: ", possible_moves)
+
         if player.color == piece.color:
             for move in possible_moves:
+                print("Checking Move:", move)
                 if move == [target_row, target_col]:
-                    '''
-                    move piece temporarily to a new space, calculate enemy moves, check if King is not in check
-                    otherwise, reset the temp movements
-                    '''
-                    saved_row = piece.position[0]
-                    saved_col = piece.position[1]
-                    board.squares[piece.get_position[0]][piece.get_position[1]].set_piece(None)
-                    board.squares[target_row][target_col].set_piece(piece)
-                    enemy_moves = StateHandler.find_all_enemy_moves(board, player)
-                    if not StateHandler.is_check(player_king, enemy_moves):
-                        return True
-                    else:
-                        board.squares[saved_row][saved_col].set_piece(piece)
+                    print("Move Matches Target Row and Column")
+                    # check if it's a valid move for capturing or a regular move
+                    target_piece = board.squares[target_row][target_col].get_piece()
+                    print("Target Piece: ", target_piece)
+                    if StateHandler.is_capture(piece, target_piece):
+                        print("Move is a capture")
+                        # temporarily remove the target piece to check for check condition
+                        saved_target_row = target_piece.position[0]
+                        saved_target_col = target_piece.position[1]
                         board.squares[target_row][target_col].set_piece(None)
-                        return False
+
+                        # move piece temporarily
+                        saved_row = piece.position[0]
+                        saved_col = piece.position[1]
+                        board.squares[piece.position[0]][piece.position[1]].set_piece(None)
+                        board.squares[target_row][target_col].set_piece(piece)
+
+                        enemy_moves = StateHandler.find_all_enemy_moves(board, player)
+                        print("Enemy Moves:", enemy_moves)
+                        if not StateHandler.is_check(player_king, enemy_moves):
+                            print("Move is valid")
+                            print("Current position", target_row, target_col)
+                            return True
+                        else:
+                            print("Move puts king in check")
+                            # reset board
+                            board.squares[saved_row][saved_col].set_piece(piece)
+                            board.squares[target_row][target_col].set_piece(None)
+                            board.squares[saved_target_row][saved_target_col].set_piece(target_piece)
+                            return False
+                    else:
+                        print("Move is not a capture")
+                        # regular move without capturing
+                        # move piece temporarily
+                        saved_row = piece.position[0]
+                        saved_col = piece.position[1]
+                        board.squares[piece.position[0]][piece.position[1]].set_piece(None)
+                        board.squares[target_row][target_col].set_piece(piece)
+
+                        enemy_moves = StateHandler.find_all_enemy_moves(board, player)
+                        print("Enemy Moves:", enemy_moves)
+                        if not StateHandler.is_check(player_king, enemy_moves):
+                            print("Move is valid")
+                            return True
+                        else:
+                            print("Move puts king in check")
+                            # reset temp movements
+                            board.squares[saved_row][saved_col].set_piece(piece)
+                            board.squares[target_row][target_col].set_piece(None)
+                            return False
+            print("No matching move found")
         return False
 
     @staticmethod
@@ -127,13 +165,29 @@ class StateHandler:
             return False
 
     @staticmethod
-    def is_checkmate(cls, board, king, enemy_moves):
+    def make_temporary_move(board, piece, target_row, target_col):
+        temp_board = board.copy() # create copy of current board
+
+        original_row, original_col = piece.get_position() # save original position of piece to be moved
+        temp_board.squares[original_row][original_col].set_piece(None) # remove piece from original position
+        temp_board.squares[target_row][target_col].set_piece(piece) # place piece in new position
+
+        return temp_board
+
+
+    @staticmethod
+    def is_checkmate(cls, board, player, king, enemy_moves):
         if cls.is_check(king, enemy_moves):
-            possible_moves = king.find_moves(board)
-            no_moves = all(move in enemy_moves for move in possible_moves)
-            if no_moves:
-                return True
-        return False
+            all_player_moves = cls.find_all_player_moves(board, player)
+            for move in all_player_moves:
+                # simulate move on copy of board
+                piece = board.squares[move[0]][move[1]].get_piece()
+                if piece and piece.color == player.color:
+                    if cls.move_is_valid(board, piece, move[0], move[1], player, king):
+                        return False # at least one move resolves check so no checkmate
+            
+            return True # if no move can resolve check, it's checkmate
+        return False # if king isn't in check, no checkmate from start
 
     @staticmethod
     def is_stalemate(cls, board, king, enemy_moves):

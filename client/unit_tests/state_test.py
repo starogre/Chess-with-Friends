@@ -109,12 +109,50 @@ def test_find_all_enemy_moves():
 
 
 def test_move_is_valid():
-    pass
+    board = Board()
+    state_handler = StateHandler()
+
+    for row in board.squares:
+        for square in row:
+            square.set_piece(None)
+
+    king = King("WHITE", (0, 0))
+    queen = Queen("BLACK", (1, 1)) # place queen in position  
+    rook = Rook("BLACK", (2, 1)) # place rook in position"
+
+    board.squares[0][0].set_piece(king)
+    board.squares[1][1].set_piece(queen)
+    board.squares[2][1].set_piece(rook)
+    player = Player("WHITE")
+
+    # Valid move for the king to capture the queen
+    is_valid_capture = state_handler.move_is_valid(board, king, 1, 1, player, king)
+    assert is_valid_capture is True
+
+    # Invalid move for the king to move to a non-capturable position
+    is_valid_regular_move = state_handler.move_is_valid(board, king, 0, 1, player, king)
+    assert is_valid_regular_move is False
 
 
 def test_is_capture():
-    pass
+    state_handler = StateHandler()
 
+    # capture pieces for testing
+    white_piece = Pawn("WHITE", (0, 0))
+    black_piece = Pawn("BLACK", (1, 1))
+    empty_square = None
+
+    # testing when no piece is present in the target square
+    is_valid_capture_empty_square = state_handler.is_capture(white_piece, empty_square)
+    assert is_valid_capture_empty_square is False
+
+    # testing when the pieces are of different colors (valid capture)
+    is_valid_capture = state_handler.is_capture(white_piece, black_piece)
+    assert is_valid_capture is True
+
+    # testing when the pieces are of the same color (not a valid capture)
+    is_invalid_capture = state_handler.is_capture(white_piece, Pawn("WHITE", (2, 2)))
+    assert is_invalid_capture is False
 
 def test_pawn_moved_two():
     pass
@@ -154,9 +192,41 @@ def test_check():
 
     assert StateHandler.is_check(king_piece, enemy_moves) == False
 
+def test_make_temporary_move():
+    board = Board()
+    state_handler = StateHandler()
+
+    # create a piece and place it on the board
+    piece = King("WHITE", (0, 0))
+    board.squares[0][0].set_piece(piece)
+
+    # create temp board and apply move
+    temp_board = state_handler.make_temporary_move(board, piece, 1, 0)
+
+    # ensure move was applied to temp board
+    assert temp_board.squares[1][0].get_piece() is piece
+
+    # ensure the original board was not modified
+    assert board.squares[0][0].get_piece() is piece
+
 
 def test_checkmate():
-    pass
+    board = Board()
+    state_handler = StateHandler()
+
+    king = King("WHITE", (0, 0))
+    queen = Queen("BLACK", (1, 1)) # place queen in position
+    # rook = Rook("BLACK", (1, 2)) # place rook in position")
+    board.squares[0][0].set_piece(king)
+    board.squares[1][1].set_piece(queen)
+    # board.squares[1][2].set_piece(rook)
+
+    enemy_moves = state_handler.find_all_enemy_moves(board, Player("WHITE"))
+
+    is_checkmate = state_handler.is_checkmate(StateHandler, board, Player("WHITE"), king, enemy_moves)
+    # print(state_handler.find_all_enemy_moves(board, Player("WHITE")))
+    # print(king.find_moves(board))
+    # assert is_checkmate is False
 
 
 def test_stalemate():
