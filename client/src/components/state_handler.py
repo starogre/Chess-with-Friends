@@ -6,6 +6,13 @@ last_move = None
 
 class StateHandler:
     @staticmethod
+    def setup_players():
+        player1 = Player("WHITE")
+        player2 = Player("BLACK")
+        player1.active = True # set white player active first
+        return player1, player2
+    
+    @staticmethod
     def setup_chess_board(board):
         pieces = [
             ['R', 'N', 'B', 'K', 'Q', 'B', 'N', 'R'],
@@ -17,6 +24,16 @@ class StateHandler:
             ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
             ['r', 'n', 'b', 'k', 'q', 'b', 'n', 'r']
         ]
+        # pieces = [
+        #     ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+        #     ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+        #     ['-', '-', '-', '-', '-', '-', '-', '-'],
+        #     ['-', '-', '-', '-', '-', '-', '-', '-'],
+        #     ['-', '-', '-', '-', '-', '-', '-', '-'],
+        #     ['-', '-', '-', '-', '-', '-', '-', '-'],
+        #     ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+        #     ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        # ]
         StateHandler.setup_board(board, pieces)
     
     @staticmethod
@@ -29,62 +46,20 @@ class StateHandler:
             'Q': Queen,
             'K': King
         }
-        for row_idx, row in enumerate(pieces):
-            for col_idx, piece in enumerate(row):
+        for row_idx, row in enumerate(reversed(pieces)):
+            for col_idx, piece in enumerate(reversed(row)):
                 if piece != '-':
                     piece_color = "WHITE" if piece.isupper() else "BLACK"
                     piece_type = piece.upper()
                     piece_class = piece_mapping[piece_type]
-                    board.squares[row_idx][col_idx].set_piece(piece_class(piece_color, (row_idx, col_idx)))
+                    adjusted_row = 7 - row_idx
+                    adjusted_col = 7 - col_idx
+                    board.squares[adjusted_row][adjusted_col].set_piece(piece_class(piece_color, (adjusted_row, adjusted_col)))
                                                                   
-
-    # @staticmethod
-    # def setup_chess_pieces(board):
-    #     start_white_pieces = [[0, 0, 0, 0, 0, 0, 0, 0],
-    #                           [0, 0, 0, 0, 0, 0, 0, 0],
-    #                           [0, 0, 0, 0, 0, 0, 0, 0],
-    #                           [0, 0, 0, 0, 0, 0, 0, 0],
-    #                           [0, 0, 0, 0, 0, 0, 0, 0],
-    #                           [0, 0, 0, 0, 0, 0, 0, 0],
-    #                           [1, 1, 1, 1, 1, 1, 1, 1],
-    #                           [4, 3, 2, 5, 6, 2, 3, 4]]
-    #     start_black_pieces = [[4, 3, 2, 5, 6, 2, 3, 4],
-    #                           [1, 1, 1, 1, 1, 1, 1, 1],
-    #                           [0, 0, 0, 0, 0, 0, 0, 0],
-    #                           [0, 0, 0, 0, 0, 0, 0, 0],
-    #                           [0, 0, 0, 0, 0, 0, 0, 0],
-    #                           [0, 0, 0, 0, 0, 0, 0, 0],
-    #                           [0, 0, 0, 0, 0, 0, 0, 0],
-    #                           [0, 0, 0, 0, 0, 0, 0, 0]]
-    #     for i in range(len(board.squares)):
-    #         for j in range(len(board.squares)):
-    #             if start_white_pieces[i][j] == 1:
-    #                 board.squares[i][j].set_piece(Pawn("WHITE", [i, j]))
-    #             if start_black_pieces[i][j] == 1:
-    #                 board.squares[i][j].set_piece(Pawn("BLACK", [i, j]))
-    #             if start_white_pieces[i][j] == 2:
-    #                 board.squares[i][j].set_piece(Bishop("WHITE", [i, j]))
-    #             if start_black_pieces[i][j] == 2:
-    #                 board.squares[i][j].set_piece(Bishop("BLACK", [i, j]))
-    #             if start_white_pieces[i][j] == 3:
-    #                 board.squares[i][j].set_piece(Knight("WHITE", [i, j]))
-    #             if start_black_pieces[i][j] == 3:
-    #                 board.squares[i][j].set_piece(Knight("BLACK", [i, j]))
-    #             if start_white_pieces[i][j] == 4:
-    #                 board.squares[i][j].set_piece(Rook("WHITE", [i, j]))
-    #             if start_black_pieces[i][j] == 4:
-    #                 board.squares[i][j].set_piece(Rook("BLACK", [i, j]))
-    #             if start_white_pieces[i][j] == 5:
-    #                 board.squares[i][j].set_piece(Queen("WHITE", [i, j]))
-    #             if start_black_pieces[i][j] == 5:
-    #                 board.squares[i][j].set_piece(Queen("BLACK", [i, j]))
-    #             if start_white_pieces[i][j] == 6:
-    #                 board.squares[i][j].set_piece(King("WHITE", [i, j]))
-    #             if start_black_pieces[i][j] == 6:
-    #                 board.squares[i][j].set_piece(King("BLACK", [i, j]))
-
     @staticmethod
-    def select_square(board, square):
+    def select_square(board, position):
+        x, y = position
+        square = board.squares[y][x]
         if not square.is_empty():
             if not square.selected:
                 for row in board.squares:
@@ -102,6 +77,27 @@ class StateHandler:
     @staticmethod
     def select_destination(board, target_row, target_col):
         return board.squares[target_row][target_col]
+    
+    @staticmethod
+    def convert_to_coordinates(input_str, active_player):
+        file_mapping = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7}
+        file_letter = input_str[0].upper()
+        rank_number = int(input_str[1]) - 1  # Adjust for zero indexing
+
+        if file_letter in file_mapping and 1 <= rank_number <= 8:
+            file_index = file_mapping[file_letter]
+
+            # Adjust coordinates based on player's turn
+            if active_player.color == 'Black':
+                file_index = 7 - file_index
+                rank_number = 7 - rank_number
+
+            return file_index, rank_number
+        else:
+            # Handle invalid input, maybe raise an exception or return None
+            return None
+
+
 
     @staticmethod
     def find_all_player_moves(board, player):
