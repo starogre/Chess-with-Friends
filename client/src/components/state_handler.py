@@ -5,51 +5,83 @@ last_move = None
 
 
 class StateHandler:
-
     @staticmethod
-    def setup_chess_pieces(board):
-        start_white_pieces = [[0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 0, 0, 0],
-                              [1, 1, 1, 1, 1, 1, 1, 1],
-                              [4, 3, 2, 5, 6, 2, 3, 4]]
-        start_black_pieces = [[4, 3, 2, 5, 6, 2, 3, 4],
-                              [1, 1, 1, 1, 1, 1, 1, 1],
-                              [0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 0, 0, 0]]
-        for i in range(len(board.squares)):
-            for j in range(len(board.squares)):
-                if start_white_pieces[i][j] == 1:
-                    board.squares[i][j].set_piece(Pawn("WHITE", [i, j]))
-                if start_black_pieces[i][j] == 1:
-                    board.squares[i][j].set_piece(Pawn("BLACK", [i, j]))
-                if start_white_pieces[i][j] == 2:
-                    board.squares[i][j].set_piece(Bishop("WHITE", [i, j]))
-                if start_black_pieces[i][j] == 2:
-                    board.squares[i][j].set_piece(Bishop("BLACK", [i, j]))
-                if start_white_pieces[i][j] == 3:
-                    board.squares[i][j].set_piece(Knight("WHITE", [i, j]))
-                if start_black_pieces[i][j] == 3:
-                    board.squares[i][j].set_piece(Knight("BLACK", [i, j]))
-                if start_white_pieces[i][j] == 4:
-                    board.squares[i][j].set_piece(Rook("WHITE", [i, j]))
-                if start_black_pieces[i][j] == 4:
-                    board.squares[i][j].set_piece(Rook("BLACK", [i, j]))
-                if start_white_pieces[i][j] == 5:
-                    board.squares[i][j].set_piece(Queen("WHITE", [i, j]))
-                if start_black_pieces[i][j] == 5:
-                    board.squares[i][j].set_piece(Queen("BLACK", [i, j]))
-                if start_white_pieces[i][j] == 6:
-                    board.squares[i][j].set_piece(King("WHITE", [i, j]))
-                if start_black_pieces[i][j] == 6:
-                    board.squares[i][j].set_piece(King("BLACK", [i, j]))
+    def setup_chess_board(board):
+        pieces = [
+            ['R', 'N', 'B', 'K', 'Q', 'B', 'N', 'R'],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['-', '-', '-', '-', '-', '-', '-', '-'],
+            ['-', '-', '-', '-', '-', '-', '-', '-'],
+            ['-', '-', '-', '-', '-', '-', '-', '-'],
+            ['-', '-', '-', '-', '-', '-', '-', '-'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            ['r', 'n', 'b', 'k', 'q', 'b', 'n', 'r']
+        ]
+        StateHandler.setup_board(board, pieces)
+    
+    @staticmethod
+    def setup_board(board, pieces):
+        piece_mapping = {
+            'P': Pawn,
+            'N': Knight,
+            'B': Bishop,
+            'R': Rook,
+            'Q': Queen,
+            'K': King
+        }
+        for row_idx, row in enumerate(pieces):
+            for col_idx, piece in enumerate(row):
+                if piece != '-':
+                    piece_color = "WHITE" if piece.isupper() else "BLACK"
+                    piece_type = piece.upper()
+                    piece_class = piece_mapping[piece_type]
+                    board.squares[row_idx][col_idx].set_piece(piece_class(piece_color, (row_idx, col_idx)))
+                                                                  
+
+    # @staticmethod
+    # def setup_chess_pieces(board):
+    #     start_white_pieces = [[0, 0, 0, 0, 0, 0, 0, 0],
+    #                           [0, 0, 0, 0, 0, 0, 0, 0],
+    #                           [0, 0, 0, 0, 0, 0, 0, 0],
+    #                           [0, 0, 0, 0, 0, 0, 0, 0],
+    #                           [0, 0, 0, 0, 0, 0, 0, 0],
+    #                           [0, 0, 0, 0, 0, 0, 0, 0],
+    #                           [1, 1, 1, 1, 1, 1, 1, 1],
+    #                           [4, 3, 2, 5, 6, 2, 3, 4]]
+    #     start_black_pieces = [[4, 3, 2, 5, 6, 2, 3, 4],
+    #                           [1, 1, 1, 1, 1, 1, 1, 1],
+    #                           [0, 0, 0, 0, 0, 0, 0, 0],
+    #                           [0, 0, 0, 0, 0, 0, 0, 0],
+    #                           [0, 0, 0, 0, 0, 0, 0, 0],
+    #                           [0, 0, 0, 0, 0, 0, 0, 0],
+    #                           [0, 0, 0, 0, 0, 0, 0, 0],
+    #                           [0, 0, 0, 0, 0, 0, 0, 0]]
+    #     for i in range(len(board.squares)):
+    #         for j in range(len(board.squares)):
+    #             if start_white_pieces[i][j] == 1:
+    #                 board.squares[i][j].set_piece(Pawn("WHITE", [i, j]))
+    #             if start_black_pieces[i][j] == 1:
+    #                 board.squares[i][j].set_piece(Pawn("BLACK", [i, j]))
+    #             if start_white_pieces[i][j] == 2:
+    #                 board.squares[i][j].set_piece(Bishop("WHITE", [i, j]))
+    #             if start_black_pieces[i][j] == 2:
+    #                 board.squares[i][j].set_piece(Bishop("BLACK", [i, j]))
+    #             if start_white_pieces[i][j] == 3:
+    #                 board.squares[i][j].set_piece(Knight("WHITE", [i, j]))
+    #             if start_black_pieces[i][j] == 3:
+    #                 board.squares[i][j].set_piece(Knight("BLACK", [i, j]))
+    #             if start_white_pieces[i][j] == 4:
+    #                 board.squares[i][j].set_piece(Rook("WHITE", [i, j]))
+    #             if start_black_pieces[i][j] == 4:
+    #                 board.squares[i][j].set_piece(Rook("BLACK", [i, j]))
+    #             if start_white_pieces[i][j] == 5:
+    #                 board.squares[i][j].set_piece(Queen("WHITE", [i, j]))
+    #             if start_black_pieces[i][j] == 5:
+    #                 board.squares[i][j].set_piece(Queen("BLACK", [i, j]))
+    #             if start_white_pieces[i][j] == 6:
+    #                 board.squares[i][j].set_piece(King("WHITE", [i, j]))
+    #             if start_black_pieces[i][j] == 6:
+    #                 board.squares[i][j].set_piece(King("BLACK", [i, j]))
 
     @staticmethod
     def select_square(board, square):
