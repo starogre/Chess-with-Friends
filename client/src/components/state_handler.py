@@ -47,7 +47,7 @@ class StateHandler:
             'K': King
         }
         for row_idx, row in enumerate(reversed(pieces)):
-            for col_idx, piece in enumerate(reversed(row)):
+            for col_idx, piece in enumerate(row):
                 if piece != '-':
                     piece_color = "WHITE" if piece.isupper() else "BLACK"
                     piece_type = piece.upper()
@@ -80,11 +80,19 @@ class StateHandler:
     
     @staticmethod
     def convert_to_coordinates(input_str, active_player):
+        # print(f"Input string: {input_str}")
+
         file_mapping = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7}
         file_letter = input_str[0].upper()
-        rank_number = int(input_str[1]) - 1  # Adjust for zero indexing
+        rank_number = int(input_str[1]) - 1  # subtract 1 if needed to Adjust for zero indexing
 
-        if file_letter in file_mapping and 1 <= rank_number <= 8:
+        # print("File letter:", file_letter)
+        # print("Rank number:", rank_number)
+
+        if file_letter in file_mapping and 0 <= rank_number <= 7:
+            # print("Inside condition block")
+            # print("File index:", file_mapping[file_letter])
+
             file_index = file_mapping[file_letter]
 
             # Adjust coordinates based on player's turn
@@ -124,7 +132,9 @@ class StateHandler:
 
     @staticmethod
     def move_is_valid(board, piece, target_row, target_col, player, player_king):
-        possible_moves = piece.find_moves(board)
+        reversed_possible_moves = piece.find_moves(board)
+        # reverse the moves back to fit with piece algorithms
+        possible_moves = [[move[1], move[0]] for move in reversed_possible_moves]
         print("Possible Moves: ", possible_moves)
 
         if player.color == piece.color:
@@ -304,31 +314,63 @@ class StateHandler:
 
     @staticmethod
     def move_piece(board, piece, row, col, target_row, target_col):
-        board.squares[target_row][target_col].set_piece(piece)
+        board.squares[target_col][target_row].set_piece(piece)
         board.squares[row][col].set_piece(None)
-        piece.move_piece([target_row, target_col])
+        piece.move_piece([target_col, target_row])
 
     @staticmethod
     def update_state(cls, board, piece, target_row, target_col):
         cls.set_last_move(piece, target_row, target_col)
         cls.pawn_moved_two(piece, target_row)
+        # print("piece prev pos: ", piece.position)
         cls.move_piece(board, piece, piece.position[0], piece.position[1], target_row, target_col)
         # board.squares[target_row][target_col].set_piece(piece)
+        # print("piece next pos: ", piece.position)
 
     @staticmethod
     def remove_piece(board, row, col):
         board.squares[row][col].set_piece(None)
 
     @staticmethod
-    def execute_move(cls, board, piece, target_row, target_col, player, player_king):
+    def find_king(board, color):
+        for row in board.squares:
+            for square in row:
+                piece = square.get_piece()
+                if isinstance(piece, King) and piece.color == color:
+                    return piece  # Return the king piece for the given color
+        return None  # Return None if the king piece is not found
+
+    @staticmethod
+    def execute_move(board, piece, target_row, target_col, player):
+        
+        player_king = StateHandler.find_king(board, player.color)
+        print("EXECUTING...")
+        print("Player King: ", player_king, "King Position: ", player_king.get_position())
+        print("Moving piece", piece, "Color", piece.color)
+        print("Target Row coord", target_row)
+        print("Target Col coord", target_col)
+        print("Player: ", player.color)
+
         # find target piece
         if board.squares[target_row][target_col].is_empty():
+            print("square empty", target_row, target_col)
             target_piece = None
+            # let game logic know player should keep attemping to choose space to move to
         else:
+            print("get piece from square")
             target_piece = board.squares[target_row][target_col].get_piece()
-        if cls.move_is_valid(board, piece, target_row, target_col, player, player_king):
+
+        if StateHandler.move_is_valid(board, piece, target_row, target_col, player, player_king):
+            print("Move is valid")
             # checks for is_check are in move_is valid (so player can't put themselves in check), add is_stalemate, is_checkmate later
-            if cls.is_capture(piece, target_piece):
+            if StateHandler.is_capture(piece, target_piece):
                 # remove target piece, remove target piece from players pieces, etc (need to also add player pieces inventory for UI)
-                cls.remove_piece(board, target_row, target_col)
-            cls.update_state(cls, board, piece, target_row, target_col)
+                StateHandler.remove_piece(board, target_row, target_col)
+            print("Updating board state...")
+            StateHandler.update_state(StateHandler, board, piece, target_row, target_col)
+            # move succeeded so game logic should carry out next steps
+            return True
+        else:
+            # move isn't valid, player should try again
+            print("Execute failed, move not valid")
+            return False

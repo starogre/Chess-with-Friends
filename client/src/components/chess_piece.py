@@ -70,9 +70,9 @@ class Pawn(ChessPiece):
         direction = None
 
         # add more directions if we add more players, etc
-        if self.color == "WHITE":
+        if self.color == "BLACK":
             direction = "up"
-        elif self.color == "BLACK":
+        elif self.color == "WHITE":
             direction = "down"
 
         # diagonal attacks
