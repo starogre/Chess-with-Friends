@@ -15,10 +15,12 @@ class GameController:
         self.board = Board()
 
         StateHandler.setup_chess_board(self.board)
-        print(self.board.squares[7][0].get_piece().color)
-        print(self.board.squares[0][1].get_piece().color)
+        # print(self.board.squares[7][0].get_piece().color)
+        # print(self.board.squares[0][1].get_piece().color)
         self.game_loop()
 
+
+    
     def game_loop(self):
         
         while not self.is_game_over():
@@ -46,21 +48,32 @@ class GameController:
 
                 StateHandler.select_square(self.board, position)
                 selected_piece = StateHandler.get_selected_piece_on_square(self.board)
-                print(f"Selected piece: {selected_piece}")
-                print(f"Possible moves: {selected_piece.find_moves(self.board)}")
+                print(f"Selected piece: {selected_piece.__class__.__name__}")
+                possible_moves = selected_piece.find_moves(self.board)
+                print(f"Possible move coords: {possible_moves}")
+                column_map = {0: 'A', 1: 'B', 2: 'C', 3: 'D', 4: 'E', 5:'F', 6:'G', 7:'H'}
+                chess_notation_moves = []
+                for move in possible_moves:
+                    row_index, col_index = move
+                    col_chess_notation = column_map[col_index]
+                    row_chess_notation = str(row_index + 1) # add 1 for indexing
+                    chess_notation_moves.append(col_chess_notation + row_chess_notation)
+
+                print(f"Possible moves: {', '.join(chess_notation_moves)}")
 
                 target_select = ui.get_user_input(self, "Select a space to move to (e.g. 'A2'): ")
                 target_position = StateHandler.convert_to_coordinates(target_select, self.active_player)
                 print(f"Target position coordinates: {target_position}")
-
+                target_space = StateHandler.convert_coords_to_chess_notation(target_position)
+                print(f"Target position space: {target_space}")
                 
 
                 
                 if selected_piece is not None:
-                    print(f"Selected piece: {selected_piece}")
-                    print("Target selected: ", target_select)
-                    print("Target position: ", target_position)
-                    print("Active player color turn: ", self.active_player.color)
+                    # print(f"Selected piece: {selected_piece}")
+                    # print("Target selected: ", target_select)
+                    # print("Target position: ", target_position)
+                    # ("Active player color turn: ", self.active_player.color)
                     # attempt to execute move
                     move_successful = StateHandler.execute_move(self.board, selected_piece, target_position[0], target_position[1], self.active_player)
                 
@@ -77,32 +90,32 @@ class GameController:
                 
                 
 
-    def take_turn(self, position, target):
+    # def take_turn(self, position, target):
 
-        selected_position = position
-        selected_target = target
+    #     selected_position = position
+    #     selected_target = target
 
 
-        # player selects a piece and target square
-        # interact with UI or CLI
+    #     # player selects a piece and target square
+    #     # interact with UI or CLI
         
-        StateHandler.select_square(self.board, selected_position)
-        selected_piece = StateHandler.get_selected_piece_on_square(self.board)
+    #     StateHandler.select_square(self.board, selected_position)
+    #     selected_piece = StateHandler.get_selected_piece_on_square(self.board)
         
 
-        if selected_piece is not None:
-            print(f"Selected piece: {selected_piece}")
-        else:
-            print("No piece found at the selected coordinates.")    
+    #     if selected_piece is not None:
+    #         print(f"Selected piece: {selected_piece}")
+    #     else:
+    #         print("No piece found at the selected coordinates.")    
 
-        # Attempt to execute the move
-        move_successful = StateHandler.execute_move(self.board, selected_piece, selected_target[0], selected_target[1], self.active_player, self.active_player.king)
+    #     # Attempt to execute the move
+    #     move_successful = StateHandler.execute_move(self.board, selected_piece, selected_target[0], selected_target[1], self.active_player, self.active_player.king)
 
-        if move_successful:
-            self.active_player, self.inactive_player = self.inactive_player, self.active_player
-        else:
-            # Invalid move, display a message and allow the player to choose again
-            print("Invalid move. Please choose a valid move.")
+    #     if move_successful:
+    #         self.active_player, self.inactive_player = self.inactive_player, self.active_player
+    #     else:
+    #         # Invalid move, display a message and allow the player to choose again
+    #         print("Invalid move. Please choose a valid move.")
 
         
 
